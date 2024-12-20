@@ -9,6 +9,11 @@ public class TightBoundingBox extends BoundingBox
         super(minlon,minlat,maxlon,maxlat);
     }
 
+    public TightBoundingBox(BoundingBox bb)
+    {
+        super(bb.minlon,bb.minlat,bb.maxlon,bb.maxlat);
+    }
+
     public boolean contains(int[] lon, int[] lat)
     {
         for (int i=0;i<lon.length;i++)

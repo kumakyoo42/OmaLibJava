@@ -24,6 +24,11 @@ public class TightPolygon extends Polygon
         super(r,f,stripeSize);
     }
 
+    public TightPolygon(Polygon p)
+    {
+        super(p);
+    }
+
     public boolean contains(int[] lon, int[] lat)
     {
         for (int i=0;i<lon.length;i++)

@@ -30,6 +30,14 @@ public class BoundingBox
         this(in.readInt(),in.readInt(),in.readInt(),in.readInt());
     }
 
+    public BoundingBox(TightBoundingBox tbb)
+    {
+        this.minlon = tbb.minlon;
+        this.minlat = tbb.minlat;
+        this.maxlon = tbb.maxlon;
+        this.maxlat = tbb.maxlat;
+    }
+
     public boolean contains(int lon, int lat)
     {
         return lon>=minlon && lon<=maxlon && lat>=minlat && lat<=maxlat;

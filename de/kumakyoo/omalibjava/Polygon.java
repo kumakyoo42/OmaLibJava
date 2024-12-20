@@ -5,9 +5,9 @@ import java.io.*;
 
 public class Polygon
 {
-    private Map<Integer,List<Line>> stripes;
+    protected Map<Integer,List<Line>> stripes;
 
-    private final int stripeSize;
+    protected final int stripeSize;
 
     public Polygon(String filename) throws IOException
     {
@@ -29,6 +29,12 @@ public class Polygon
     {
         this.stripeSize = stripeSize;
         queryPolygon(r,f);
+    }
+
+    public Polygon(Polygon tp)
+    {
+        this.stripeSize = tp.stripeSize;
+        this.stripes = tp.stripes;
     }
 
     public BoundingBox getBoundingBox()
