@@ -30,7 +30,7 @@ abstract public class Element
         this.tags = null;
     }
 
-    public void readTags(MyDataInputStream in) throws IOException
+    void readTags(MyDataInputStream in) throws IOException
     {
         tags = new HashMap<>();
         int count = in.readSmallInt();
@@ -38,7 +38,7 @@ abstract public class Element
             tags.put(in.readString(),in.readString());
     }
 
-    public void readMeta(MyDataInputStream in, int features) throws IOException
+    void readMeta(MyDataInputStream in, int features) throws IOException
     {
         if ((features&2)!=0)
             id = in.readLong();
