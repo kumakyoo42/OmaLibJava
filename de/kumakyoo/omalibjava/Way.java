@@ -27,12 +27,7 @@ public class Way extends Element
         for (int i=0;i<lon.length;i++)
             b.append(" ").append(lon[i]/1e7).append(",").append(lat[i]/1e7);
         b.append("\n");
-        b.append(toPartialString());
+        b.append(super.toString());
         return b.toString();
-    }
-
-    public String toPartialString()
-    {
-        return super.toString();
     }
 }

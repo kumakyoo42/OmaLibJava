@@ -33,6 +33,8 @@ public class PolygonFilter extends BoundingBoxFilter
             return poly.contains(((Node)e).lon,((Node)e).lat);
         if (e instanceof Way)
             return poly.contains(((Way)e).lon,((Way)e).lat);
+        if (e instanceof Area)
+            return poly.contains(((Area)e).lon,((Area)e).lat);
         return false;
     }
 

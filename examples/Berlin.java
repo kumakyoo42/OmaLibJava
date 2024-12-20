@@ -18,7 +18,7 @@ public class Berlin
         Filter f1 = new TagFilter("name","Berlin");
         Filter f2 = new BlockFilter("boundary");
         Filter f3 = new AndFilter(f1,f2);
-        Filter berlin = new PolyFilter(new TightPoly(r,f3));
+        Filter berlin = new PolygonFilter(new TightPolygon(r,f3));
 
         r.setFilter(new AndFilter(berlin,new TypeFilter("N")));
         System.out.println("nodes in berlin: "+r.count());

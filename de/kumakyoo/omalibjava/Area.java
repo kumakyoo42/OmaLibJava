@@ -2,16 +2,27 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class Area extends Way
+public class Area extends Element
 {
+    public int[] lon;
+    public int[] lat;
+
     public int[][] holes_lon;
     public int[][] holes_lat;
 
     public Area(MyDataInputStream in, String key, String value) throws IOException
     {
-        super(in,key,value);
-
+        super(key,value);
         int count = in.readSmallInt();
+        lon = new int[count];
+        lat = new int[count];
+        for (int i=0;i<count;i++)
+        {
+            lon[i] = in.readDeltaX();
+            lat[i] = in.readDeltaY();
+        }
+
+        count = in.readSmallInt();
         holes_lon = new int[count][];
         holes_lat = new int[count][];
         for (int i=0;i<count;i++)
@@ -44,7 +55,7 @@ public class Area extends Way
                 b.append("\n");
             }
         }
-        b.append(super.toPartialString());
+        b.append(super.toString());
         return b.toString();
     }
 }
