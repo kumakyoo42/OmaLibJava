@@ -69,7 +69,7 @@ public class Polygon
         return stripes.get(nr);
     }
 
-    boolean contains(int lon, int lat)
+    public boolean contains(int lon, int lat)
     {
         int nr = lat/stripeSize;
         List<Line> ll = stripes.get(nr);
@@ -89,7 +89,7 @@ public class Polygon
         return inside;
     }
 
-    boolean contains(int[] lon, int[] lat)
+    public boolean contains(int[] lon, int[] lat)
     {
         for (int i=0;i<lon.length;i++)
             if (contains(lon[i],lat[i])) return true;
