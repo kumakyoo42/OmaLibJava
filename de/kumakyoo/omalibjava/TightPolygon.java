@@ -2,24 +2,24 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class TightPoly extends Poly
+public class TightPolygon extends Polygon
 {
-    public TightPoly(String filename) throws IOException
+    public TightPolygon(String filename) throws IOException
     {
         super(filename);
     }
 
-    public TightPoly(String filename, int stripeSize) throws IOException
+    public TightPolygon(String filename, int stripeSize) throws IOException
     {
         super(filename,stripeSize);
     }
 
-    public TightPoly(OmaReader r, Filter f) throws IOException
+    public TightPolygon(OmaReader r, Filter f) throws IOException
     {
         super(r,f);
     }
 
-    public TightPoly(OmaReader r, Filter f, int stripeSize) throws IOException
+    public TightPolygon(OmaReader r, Filter f, int stripeSize) throws IOException
     {
         super(r,f,stripeSize);
     }

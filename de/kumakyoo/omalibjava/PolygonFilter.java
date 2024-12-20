@@ -2,25 +2,25 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class PolyFilter extends BoundingBoxFilter
+public class PolygonFilter extends BoundingBoxFilter
 {
-    private Poly poly;
+    private Polygon poly;
 
-    public PolyFilter(String filename) throws IOException
+    public PolygonFilter(String filename) throws IOException
     {
         super(null);
-        poly = new Poly(filename);
-        bounds = poly.getBounds();
+        poly = new Polygon(filename);
+        bounds = poly.getBoundingBox();
     }
 
-    public PolyFilter(Poly poly)
+    public PolygonFilter(Polygon poly)
     {
         super(null);
         this.poly = poly;
-        bounds = poly.getBounds();
+        bounds = poly.getBoundingBox();
     }
 
-    public boolean needsChunk(byte type, Bounds b)
+    public boolean needsChunk(byte type, BoundingBox b)
     {
         cb = b;
         return bounds.intersects(b);

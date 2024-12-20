@@ -28,7 +28,7 @@ public class TypeFilter extends Filter
             this.types[i] = (byte)types.charAt(i);
     }
 
-    public boolean needsChunk(byte type, Bounds b)
+    public boolean needsChunk(byte type, BoundingBox b)
     {
         for (byte t:types)
             if (t==type)

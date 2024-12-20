@@ -16,7 +16,7 @@ public class OrFilter extends Filter
         s = new boolean[fs.length];
     }
 
-    public boolean needsChunk(byte type, Bounds b)
+    public boolean needsChunk(byte type, BoundingBox b)
     {
         for (int i=0;i<fs.length;i++)
             c[i] = fs[i].needsChunk(type,b);

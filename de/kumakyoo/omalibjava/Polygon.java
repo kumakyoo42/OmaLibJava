@@ -3,69 +3,35 @@ package de.kumakyoo.omalibjava;
 import java.util.*;
 import java.io.*;
 
-public class Poly
+public class Polygon
 {
     private Map<Integer,List<Line>> stripes;
 
     private final int stripeSize;
 
-    public Poly(String filename) throws IOException
+    public Polygon(String filename) throws IOException
     {
         this(filename,100000);
     }
 
-    public Poly(String filename, int stripeSize) throws IOException
+    public Polygon(String filename, int stripeSize) throws IOException
     {
         this.stripeSize = stripeSize;
-        readPoly(filename);
+        readPolygon(filename);
     }
 
-    public Poly(OmaReader r, Filter f) throws IOException
+    public Polygon(OmaReader r, Filter f) throws IOException
     {
         this(r,f,100000);
     }
 
-    public Poly(OmaReader r, Filter f, int stripeSize) throws IOException
+    public Polygon(OmaReader r, Filter f, int stripeSize) throws IOException
     {
         this.stripeSize = stripeSize;
-        queryPoly(r,f);
+        queryPolygon(r,f);
     }
 
-    private void queryPoly(OmaReader r, Filter f) throws IOException
-    {
-        Filter save = r.getFilter();
-
-        r.reset();
-        r.setFilter(new AndFilter(f,new TypeFilter("A")));
-
-        stripes = new HashMap<>();
-
-        while (true)
-        {
-            Area a = (Area)r.next();
-            if (a==null) break;
-
-            List<Point> poly = new ArrayList<>();
-            for (int i=0;i<a.lon.length;i++)
-                poly.add(new Point(a.lon[i],a.lat[i]));
-            addStripes(poly);
-
-            for (int j=0;j<a.holes_lon.length;j++)
-            {
-                poly = new ArrayList<>();
-                for (int i=0;i<a.holes_lon[j].length;i++)
-                    poly.add(new Point(a.holes_lon[j][i],a.holes_lat[j][i]));
-                addStripes(poly);
-            }
-        }
-
-        sortStripes();
-
-        r.reset();
-        r.setFilter(save);
-    }
-
-    public Bounds getBounds()
+    public BoundingBox getBoundingBox()
     {
         boolean first = true;
         long minlon = 0;
@@ -88,7 +54,7 @@ public class Poly
                 maxlat = Math.max(maxlat,Math.max(l.y1,l.y2));
             }
 
-        return new Bounds((int)minlon,(int)minlat,(int)maxlon,(int)maxlat);
+        return new BoundingBox((int)minlon,(int)minlat,(int)maxlon,(int)maxlat);
     }
 
     private List<Line> get(int lon, int lat)
@@ -124,7 +90,41 @@ public class Poly
         return false;
     }
 
-    private void readPoly(String filename) throws IOException
+    private void queryPolygon(OmaReader r, Filter f) throws IOException
+    {
+        Filter save = r.getFilter();
+
+        r.reset();
+        r.setFilter(new AndFilter(f,new TypeFilter("A")));
+
+        stripes = new HashMap<>();
+
+        while (true)
+        {
+            Area a = (Area)r.next();
+            if (a==null) break;
+
+            List<Point> poly = new ArrayList<>();
+            for (int i=0;i<a.lon.length;i++)
+                poly.add(new Point(a.lon[i],a.lat[i]));
+            addStripes(poly);
+
+            for (int j=0;j<a.holes_lon.length;j++)
+            {
+                poly = new ArrayList<>();
+                for (int i=0;i<a.holes_lon[j].length;i++)
+                    poly.add(new Point(a.holes_lon[j][i],a.holes_lat[j][i]));
+                addStripes(poly);
+            }
+        }
+
+        sortStripes();
+
+        r.reset();
+        r.setFilter(save);
+    }
+
+    private void readPolygon(String filename) throws IOException
     {
         BufferedReader r = new BufferedReader(new FileReader(filename));
 

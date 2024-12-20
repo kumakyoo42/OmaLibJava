@@ -2,9 +2,9 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class TightBounds extends Bounds
+public class TightBoundingBox extends BoundingBox
 {
-    public TightBounds(int minlon, int minlat, int maxlon, int maxlat)
+    public TightBoundingBox(int minlon, int minlat, int maxlon, int maxlat)
     {
         super(minlon,minlat,maxlon,maxlat);
     }

@@ -11,7 +11,7 @@ public class NotFilter extends Filter
         this.f = f;
     }
 
-    public boolean needsChunk(byte type, Bounds b)
+    public boolean needsChunk(byte type, BoundingBox b)
     {
         c = f.needsChunk(type,b);
         return true;

@@ -2,26 +2,26 @@ package de.kumakyoo.omalibjava;
 
 public class BoundingBoxFilter extends Filter
 {
-    protected Bounds bounds;
+    protected BoundingBox bounds;
 
-    protected Bounds cb;
+    protected BoundingBox cb;
 
-    public BoundingBoxFilter(Bounds bounds)
+    public BoundingBoxFilter(BoundingBox bounds)
     {
         this.bounds = bounds;
     }
 
     public BoundingBoxFilter(int minlon, int minlat, int maxlon, int maxlat)
     {
-        this.bounds = new Bounds(minlon,minlat,maxlon,maxlat);
+        this.bounds = new BoundingBox(minlon,minlat,maxlon,maxlat);
     }
 
     public BoundingBoxFilter(double minlon, double minlat, double maxlon, double maxlat)
     {
-        this.bounds = new Bounds(minlon,minlat,maxlon,maxlat);
+        this.bounds = new BoundingBox(minlon,minlat,maxlon,maxlat);
     }
 
-    public boolean needsChunk(byte type, Bounds b)
+    public boolean needsChunk(byte type, BoundingBox b)
     {
         cb = b;
         return bounds.intersects(b);

@@ -2,7 +2,7 @@ package de.kumakyoo.omalibjava;
 
 public class Filter
 {
-    public boolean needsChunk(byte type, Bounds b)
+    public boolean needsChunk(byte type, BoundingBox b)
     {
         return true;
     }

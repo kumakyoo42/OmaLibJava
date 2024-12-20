@@ -2,14 +2,14 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class Bounds
+public class BoundingBox
 {
     public int minlon;
     public int minlat;
     public int maxlon;
     public int maxlat;
 
-    public Bounds(int minlon, int minlat, int maxlon, int maxlat)
+    public BoundingBox(int minlon, int minlat, int maxlon, int maxlat)
     {
         this.minlon = minlon;
         this.minlat = minlat;
@@ -17,7 +17,7 @@ public class Bounds
         this.maxlat = maxlat;
     }
 
-    public Bounds(double minlon, double minlat, double maxlon, double maxlat)
+    public BoundingBox(double minlon, double minlat, double maxlon, double maxlat)
     {
         this.minlon = (int)Math.round(minlon*1e7+0.5);
         this.minlat = (int)Math.round(minlat*1e7+0.5);
@@ -25,7 +25,7 @@ public class Bounds
         this.maxlat = (int)Math.round(maxlat*1e7+0.5);
     }
 
-    public Bounds(DataInputStream in) throws IOException
+    public BoundingBox(DataInputStream in) throws IOException
     {
         this(in.readInt(),in.readInt(),in.readInt(),in.readInt());
     }
@@ -42,12 +42,12 @@ public class Bounds
         return false;
     }
 
-    public boolean contains(Bounds b)
+    public boolean contains(BoundingBox b)
     {
         return contains(b.minlon,b.minlat) && contains(b.maxlon,b.maxlat);
     }
 
-    public boolean intersects(Bounds b)
+    public boolean intersects(BoundingBox b)
     {
         if (b.minlon==Integer.MAX_VALUE || minlon==Integer.MAX_VALUE) return true;
         return b.maxlon>=minlon && b.minlon<=maxlon && b.maxlat>=minlat && b.minlat<=maxlat;

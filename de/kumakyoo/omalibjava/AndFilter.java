@@ -9,7 +9,7 @@ public class AndFilter extends Filter
         this.fs = fs;
     }
 
-    public boolean needsChunk(byte type, Bounds b)
+    public boolean needsChunk(byte type, BoundingBox b)
     {
         for (Filter f:fs)
             if (!f.needsChunk(type,b)) return false;

@@ -13,7 +13,7 @@ public class OmaReader
 
     private int features;
 
-    private Bounds globalBounds;
+    private BoundingBox globalBounds;
     private ChunkTableEntry[] chunkTable;
     private BlockTableEntry[] blockTable;
     private SliceTableEntry[] sliceTable;
@@ -175,7 +175,7 @@ public class OmaReader
 
         features = in.readByte();
 
-        globalBounds = new Bounds(in.readInt(),in.readInt(),in.readInt(),in.readInt());
+        globalBounds = new BoundingBox(in.readInt(),in.readInt(),in.readInt(),in.readInt());
 
         long chunkTablePos = in.readLong();
         in.setPosition(chunkTablePos);
@@ -183,7 +183,7 @@ public class OmaReader
         int count = in.readInt();
         chunkTable = new ChunkTableEntry[count];
         for (int i=0;i<count;i++)
-            chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new Bounds(in));
+            chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
 
         reset();
     }
@@ -296,9 +296,9 @@ public class OmaReader
     {
         long start;
         byte type;
-        Bounds bounds;
+        BoundingBox bounds;
 
-        public ChunkTableEntry(long start, byte type, Bounds bounds)
+        public ChunkTableEntry(long start, byte type, BoundingBox bounds)
         {
             this.start = start;
             this.type = type;
