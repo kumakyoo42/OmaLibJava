@@ -171,6 +171,7 @@ public class OmaReader
         enforce(in.readByte()=='O', "oma-file expected");
         enforce(in.readByte()=='M', "oma-file expected");
         enforce(in.readByte()=='A', "oma-file expected");
+        enforce(in.readByte()==0, "unknown version");
 
         features = in.readByte();
 
