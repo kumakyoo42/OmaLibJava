@@ -39,7 +39,8 @@ public class OmaReader
 
     public void close() throws IOException
     {
-        in.close();
+        if (in!=null)
+            in.close();
     }
 
     public void reset() throws IOException
