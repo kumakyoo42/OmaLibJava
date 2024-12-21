@@ -388,12 +388,16 @@ The last method checks, if two bounding boxes intersect each other.
     Polygon(String filename, int stripeSize) throws IOException
     Polygon(OmaReader r, Filter f) throws IOException
     Polygon(OmaReader r, Filter f, int stripeSize) throws IOException
+    Polygon(Area[] areas)
+    Polygon(Area[] areas, int stripeSize)
     Polygon(Polygon tp)
 
     TightPolygon(String filename) throws IOException
     TightPolygon(String filename, int stripeSize) throws IOException
     TightPolygon(OmaReader r, Filter f) throws IOException
     TightPolygon(OmaReader r, Filter f, int stripeSize) throws IOException
+    TightPolygon(Area[] areas)
+    TightPolygon(Area[] areas, int stripeSize)
     TightPolygon(Polygon p)
 
 Polygons provide a representation of poly files (which essentially is
@@ -402,8 +406,8 @@ is inside this polygon. This is done by slicing the polygon into
 stripes of a certain width.
 
 Polygons can either be provided by a poly file (which is read in by
-the constructor) or an OmaReader an a filter, which are used to query
-areas from an Oma file.
+the constructor), an OmaReader and a filter, which are used to query
+areas from an Oma file, or an array of areas.
 
 If `stripeSize` is provided, it defines the width of the stripes. If
 the value is too small, this will result in huge data structures

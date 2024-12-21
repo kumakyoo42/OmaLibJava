@@ -5,13 +5,15 @@ import java.io.*;
 
 public class Polygon
 {
+    private static final int DEFAULT_STRIPE_SIZE = 100000;
+
     protected Map<Integer,List<Line>> stripes;
 
     protected final int stripeSize;
 
     public Polygon(String filename) throws IOException
     {
-        this(filename,100000);
+        this(filename,DEFAULT_STRIPE_SIZE);
     }
 
     public Polygon(String filename, int stripeSize) throws IOException
@@ -22,13 +24,24 @@ public class Polygon
 
     public Polygon(OmaReader r, Filter f) throws IOException
     {
-        this(r,f,100000);
+        this(r,f,DEFAULT_STRIPE_SIZE);
     }
 
     public Polygon(OmaReader r, Filter f, int stripeSize) throws IOException
     {
         this.stripeSize = stripeSize;
         queryPolygon(r,f);
+    }
+
+    public Polygon(Area[] areas)
+    {
+        this(areas,DEFAULT_STRIPE_SIZE);
+    }
+
+    public Polygon(Area[] areas, int stripeSize)
+    {
+        this.stripeSize = stripeSize;
+        polygonFromAreas(areas);
     }
 
     public Polygon(Polygon tp)
@@ -96,6 +109,16 @@ public class Polygon
         return false;
     }
 
+    private void polygonFromAreas(Area[] areas)
+    {
+        stripes = new HashMap<>();
+
+        for (Area a:areas)
+            addArea(a);
+
+        sortStripes();
+    }
+
     private void queryPolygon(OmaReader r, Filter f) throws IOException
     {
         Filter save = r.getFilter();
@@ -110,24 +133,29 @@ public class Polygon
             Area a = (Area)r.next();
             if (a==null) break;
 
-            List<Point> poly = new ArrayList<>();
-            for (int i=0;i<a.lon.length;i++)
-                poly.add(new Point(a.lon[i],a.lat[i]));
-            addStripes(poly);
-
-            for (int j=0;j<a.holes_lon.length;j++)
-            {
-                poly = new ArrayList<>();
-                for (int i=0;i<a.holes_lon[j].length;i++)
-                    poly.add(new Point(a.holes_lon[j][i],a.holes_lat[j][i]));
-                addStripes(poly);
-            }
+            addArea(a);
         }
 
         sortStripes();
 
         r.reset();
         r.setFilter(save);
+    }
+
+    private void addArea(Area a)
+    {
+        List<Point> poly = new ArrayList<>();
+        for (int i=0;i<a.lon.length;i++)
+            poly.add(new Point(a.lon[i],a.lat[i]));
+        addStripes(poly);
+
+        for (int j=0;j<a.holes_lon.length;j++)
+        {
+            poly = new ArrayList<>();
+            for (int i=0;i<a.holes_lon[j].length;i++)
+                poly.add(new Point(a.holes_lon[j][i],a.holes_lat[j][i]));
+            addStripes(poly);
+        }
     }
 
     private void readPolygon(String filename) throws IOException

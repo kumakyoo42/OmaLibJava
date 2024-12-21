@@ -24,6 +24,16 @@ public class TightPolygon extends Polygon
         super(r,f,stripeSize);
     }
 
+    public TightPolygon(Area[] areas)
+    {
+        super(areas);
+    }
+
+    public TightPolygon(Area[] areas, int stripeSize)
+    {
+        super(areas,stripeSize);
+    }
+
     public TightPolygon(Polygon p)
     {
         super(p);
