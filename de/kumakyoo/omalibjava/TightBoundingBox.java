@@ -9,6 +9,11 @@ public class TightBoundingBox extends BoundingBox
         super(minlon,minlat,maxlon,maxlat);
     }
 
+    public TightBoundingBox(double minlon, double minlat, double maxlon, double maxlat)
+    {
+        super(minlon,minlat,maxlon,maxlat);
+    }
+
     public TightBoundingBox(BoundingBox bb)
     {
         super(bb.minlon,bb.minlat,bb.maxlon,bb.maxlat);
