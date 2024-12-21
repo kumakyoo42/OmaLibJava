@@ -59,6 +59,11 @@ boundaries with name "Berlin" is setup. This filter is used to
 generate a PolyFilter which is used to query severeal figures about
 Berlin.
 
+* [Map.java](examples/Map.java) creates a map of the city Todtnau,
+containing forests, highways and mountain peaks. This is an even more
+complex example, showing how to create a map. The map is written as an
+eps-file to stdout.
+
 ## Known bugs
 
 There are no known bugs.
