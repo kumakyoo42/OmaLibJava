@@ -1,6 +1,7 @@
 package de.kumakyoo.omalibjava;
 
 import java.io.*;
+import java.util.*;
 import java.util.zip.*;
 
 public class OmaReader
@@ -17,6 +18,8 @@ public class OmaReader
     private ChunkTableEntry[] chunkTable;
     private BlockTableEntry[] blockTable;
     private SliceTableEntry[] sliceTable;
+
+    private Map<Byte,Map<String,Set<String>>> typeTable;
 
     private boolean chunkFinished;
     private int chunk;
@@ -179,6 +182,7 @@ public class OmaReader
         globalBounds = new BoundingBox(in.readInt(),in.readInt(),in.readInt(),in.readInt());
 
         long chunkTablePos = in.readLong();
+        readTypeTable();
         in.setPosition(chunkTablePos);
 
         int count = in.readInt();
@@ -187,6 +191,44 @@ public class OmaReader
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
 
         reset();
+    }
+
+    private void readTypeTable() throws IOException
+    {
+        MyDataInputStream orig = in;
+        if ((features&1)!=0)
+            in = new MyDataInputStream(new BufferedInputStream(new InflaterInputStream(in)));
+
+        typeTable = new HashMap<>();
+
+        int count = in.readSmallInt();
+        for (int i=0;i<count;i++)
+        {
+            byte type = in.readByte();
+            int count_keys = in.readSmallInt();
+
+            Map<String,Set<String>> keyWithValues = new HashMap<>();
+
+            for (int j=0;j<count_keys;j++)
+            {
+                String key = in.readString();
+                int count_values = in.readSmallInt();
+
+                Set<String> values = new HashSet<>();
+
+                for (int k=0;k<count_values;k++)
+                {
+                    String value = in.readString();
+                    values.add(value);
+                }
+
+                keyWithValues.put(key,values);
+            }
+
+            typeTable.put(type,keyWithValues);
+        }
+
+        in = orig;
     }
 
     private boolean readNextChunk() throws IOException
