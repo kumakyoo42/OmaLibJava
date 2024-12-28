@@ -33,11 +33,13 @@ public class OmaReader
     private String key;
     private String value;
 
-    public OmaReader(String filename)
+    public OmaReader(String filename) throws IOException
     {
         this.filename = filename;
         filter = new Filter();
         key = value = null;
+
+        openFile();
     }
 
     public void close() throws IOException
@@ -46,10 +48,8 @@ public class OmaReader
             in.close();
     }
 
-    public void reset() throws IOException
+    public void reset()
     {
-        if (in==null) openFile();
-
         chunkFinished = true;
         chunk = -1;
     }
@@ -64,44 +64,64 @@ public class OmaReader
         this.filter = filter;
     }
 
-    public boolean containsBlocks(byte type, String key) throws IOException
+    public boolean containsBlocks(byte type, String key)
     {
-        if (in==null) openFile();
-
         if (!typeTable.containsKey(type)) return false;
         return typeTable.get(type).containsKey(key);
     }
 
-    public boolean containsSlices(byte type, String key, String value) throws IOException
+    public boolean containsSlices(byte type, String key, String value)
     {
-        if (in==null) openFile();
-
         if (!typeTable.containsKey(type)) return false;
         if (!typeTable.get(type).containsKey(key)) return false;
         return typeTable.get(type).get(key).contains(value);
     }
 
-    public Set<String> keySet(byte type) throws IOException
+    public Set<String> keySet(byte type)
     {
-        if (in==null) openFile();
-
         if (!typeTable.containsKey(type)) return null;
         return typeTable.get(type).keySet();
     }
 
-    public Set<String> valueSet(byte type, String key) throws IOException
+    public Set<String> valueSet(byte type, String key)
     {
-        if (in==null) openFile();
-
         if (!typeTable.containsKey(type)) return null;
         if (!typeTable.get(type).containsKey(key)) return null;
         return typeTable.get(type).get(key);
     }
 
+    public boolean isZipped()
+    {
+        return (features&1)!=0;
+    }
+
+    public boolean containsID()
+    {
+        return (features&2)!=0;
+    }
+
+    public boolean containsVersion()
+    {
+        return (features&4)!=0;
+    }
+
+    public boolean containsTimestamp()
+    {
+        return (features&8)!=0;
+    }
+
+    public boolean containsChangeset()
+    {
+        return (features&16)!=0;
+    }
+
+    public boolean containsUser()
+    {
+        return (features&32)!=0;
+    }
+
     public Element next() throws IOException
     {
-        if (in==null) openFile();
-
         while (true)
         {
             if (chunkFinished)
@@ -157,8 +177,6 @@ public class OmaReader
 
     public long count() throws IOException
     {
-        if (in==null) openFile();
-
         long c = 0;
 
         for (chunk=0;chunk<chunkTable.length;chunk++)
