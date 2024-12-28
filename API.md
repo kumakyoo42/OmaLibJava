@@ -79,6 +79,7 @@ just tell, if a key or a key-value has been used for a certain chunk
 type. The last two provide access to a set of all keys used and a set
 of all values of a given key used.
 
+
 ## Filters
 
 While it is possible to query Oma files without a filter, it is often
@@ -281,6 +282,71 @@ Example: `NotFilter(new keyFilter("highway"))` will query all
 elements, which do not have a tag with key highway.
 
 This filter is very slow.
+
+### IDFilter
+
+    public IDFilter(long id)
+
+All elements with the given id pass the filter.
+
+Example: `IDFilter(123)` will query all elements with id 123.
+
+This filter is slow. It will only work, if the ID has been added to
+the Oma file.
+
+### VersionFilter
+
+    public VersionFilter(int version)
+
+All elements with the given version pass the filter.
+
+Example: `VersionFilter(1)` will query all elements with version 1.
+
+This filter is slow. It will only work, if the version has been added to
+the Oma file.
+
+### TimestampFilter
+
+    public TimestampFilter(long start)
+    public TimestampFilter(long start, long end)
+
+All elements with a certain timestamp pass this filter. In the first
+version, the timestamp must fit exactly. In the second version the
+timestamp must be in the period from start to end, including both ends.
+
+Example: `TimestampFilter(1704067200,1735689599)` will query all
+elements with last change in year 2024.
+
+This filter is slow. It will only work, if the timestamp information
+has been added to the Oma file.
+
+### ChangesetFilter
+
+    public ChangesetFilter(long start)
+    public ChangesetFilter(long start, long end)
+
+All elements with a certain changeset number pass this filter. In the
+first version, the changeset must fit exactly. In the second version
+the changeset must be in the range from start to end, including both
+ends.
+
+Example: `ChangesetFilter(149000000)` will query all elements
+which where last changed in the changeset 149000000.
+
+This filter is slow. It will only work, if the changeset information
+has been added to the Oma file.
+
+### UserFilter
+
+    public UserFilter(int uid)
+    public UserFilter(String user)
+
+All elements which where last changed by a certain user will pass this
+filter. In the first version the user is provided via his uid. In the
+second version the user ist provided via his user name.
+
+This filter is slow. It will only work, if the information about the
+user has been added to the Oma file.
 
 
 ## Elements
