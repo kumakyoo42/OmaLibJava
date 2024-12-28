@@ -68,6 +68,16 @@ element exists.
 Counts the number of elements which pass the filter. `count()` and
 `next()` should never be mixed.
 
+    boolean containsBlocks(byte type, String key) throws IOException
+    boolean containsSlices(byte type, String key, String value) throws IOException
+    Set<String> keySet(byte type) throws IOException
+    Set<String> valueSet(byte type, String key) throws IOException
+
+Each Oma file contains a table with the keys and values used to build
+blocks and slices. These four methods query this table. The first two
+just tell, if a key or a key-value has been used for a certain chunk
+type. The last two provide access to a set of all keys used and a set
+of all values of a given key used.
 
 ## Filters
 

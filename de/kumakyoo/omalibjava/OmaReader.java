@@ -64,6 +64,40 @@ public class OmaReader
         this.filter = filter;
     }
 
+    public boolean containsBlocks(byte type, String key) throws IOException
+    {
+        if (in==null) openFile();
+
+        if (!typeTable.containsKey(type)) return false;
+        return typeTable.get(type).containsKey(key);
+    }
+
+    public boolean containsSlices(byte type, String key, String value) throws IOException
+    {
+        if (in==null) openFile();
+
+        if (!typeTable.containsKey(type)) return false;
+        if (!typeTable.get(type).containsKey(key)) return false;
+        return typeTable.get(type).get(key).contains(value);
+    }
+
+    public Set<String> keySet(byte type) throws IOException
+    {
+        if (in==null) openFile();
+
+        if (!typeTable.containsKey(type)) return null;
+        return typeTable.get(type).keySet();
+    }
+
+    public Set<String> valueSet(byte type, String key) throws IOException
+    {
+        if (in==null) openFile();
+
+        if (!typeTable.containsKey(type)) return null;
+        if (!typeTable.get(type).containsKey(key)) return null;
+        return typeTable.get(type).get(key);
+    }
+
     public Element next() throws IOException
     {
         if (in==null) openFile();
