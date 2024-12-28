@@ -64,6 +64,9 @@ containing forests, highways and mountain peaks. This is an even more
 complex example, showing how to create a map. The map is written as an
 eps-file to stdout.
 
+* [Types.java](examples/Types.java) prints some information about the
+types used to build an Oma file.
+
 ## Known bugs
 
 There are no known bugs.
