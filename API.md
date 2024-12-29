@@ -85,6 +85,7 @@ of all values of a given key used.
     public boolean containsTimestamp()
     public boolean containsChangeset()
     public boolean containsUser()
+    public boolean elementsOnce()
 
 These methods can be used, to query the feature byte of the Oma file.
 

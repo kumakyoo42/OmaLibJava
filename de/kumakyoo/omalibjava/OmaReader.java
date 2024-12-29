@@ -120,6 +120,11 @@ public class OmaReader
         return (features&32)!=0;
     }
 
+    public boolean elementsOnce()
+    {
+        return (features&64)!=0;
+    }
+
     public Element next() throws IOException
     {
         while (true)
