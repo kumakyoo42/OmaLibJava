@@ -10,7 +10,7 @@ public class Area extends Element
     public int[][] holes_lon;
     public int[][] holes_lat;
 
-    public Area(MyDataInputStream in, String key, String value) throws IOException
+    public Area(OmaInputStream in, String key, String value) throws IOException
     {
         super(key,value);
         int count = in.readSmallInt();
@@ -34,6 +34,26 @@ public class Area extends Element
             {
                 holes_lon[i][j] = in.readDeltaX();
                 holes_lat[i][j] = in.readDeltaY();
+            }
+        }
+    }
+
+    public void writeGeo(OmaOutputStream out) throws IOException
+    {
+        out.writeSmallInt(lon.length);
+        for (int k=0;k<lon.length;k++)
+        {
+            out.writeDeltaX(lon[k]);
+            out.writeDeltaY(lat[k]);
+        }
+        out.writeSmallInt(holes_lon.length);
+        for (int k=0;k<holes_lon.length;k++)
+        {
+            out.writeSmallInt(holes_lon[k].length);
+            for (int i=0;i<holes_lon[k].length;i++)
+            {
+                out.writeDeltaX(holes_lon[k][i]);
+                out.writeDeltaY(holes_lat[k][i]);
             }
         }
     }

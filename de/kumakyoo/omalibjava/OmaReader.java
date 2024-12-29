@@ -9,8 +9,8 @@ public class OmaReader
     private String filename;
     private Filter filter;
 
-    private MyDataInputStream in;
-    private MyDataInputStream save;
+    private OmaInputStream in;
+    private OmaInputStream save;
 
     private int features;
 
@@ -227,7 +227,7 @@ public class OmaReader
 
     private void openFile() throws IOException
     {
-        in = new MyDataInputStream(filename);
+        in = new OmaInputStream(filename);
 
         enforce(in.readByte()=='O', "oma-file expected");
         enforce(in.readByte()=='M', "oma-file expected");
@@ -252,9 +252,9 @@ public class OmaReader
 
     private void readTypeTable() throws IOException
     {
-        MyDataInputStream orig = in;
+        OmaInputStream orig = in;
         if ((features&1)!=0)
-            in = new MyDataInputStream(new BufferedInputStream(new InflaterInputStream(in)));
+            in = new OmaInputStream(new BufferedInputStream(new InflaterInputStream(in)));
 
         typeTable = new HashMap<>();
 
@@ -359,7 +359,7 @@ public class OmaReader
         elementCount = in.readInt();
         save = in;
         if ((features&1)!=0)
-            in = new MyDataInputStream(new BufferedInputStream(new InflaterInputStream(in)));
+            in = new OmaInputStream(new BufferedInputStream(new InflaterInputStream(in)));
     }
 
     private Element readElement() throws IOException

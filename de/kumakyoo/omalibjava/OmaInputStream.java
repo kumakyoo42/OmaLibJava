@@ -4,7 +4,7 @@ import java.io.*;
 import java.nio.channels.*;
 import java.util.*;
 
-public class MyDataInputStream extends DataInputStream
+public class OmaInputStream extends DataInputStream
 {
     private FileInputStream fis;
     private FileChannel fc;
@@ -12,7 +12,7 @@ public class MyDataInputStream extends DataInputStream
     private int lastx;
     private int lasty;
 
-    public MyDataInputStream(String filename) throws IOException
+    public OmaInputStream(String filename) throws IOException
     {
         super(null);
 
@@ -22,7 +22,7 @@ public class MyDataInputStream extends DataInputStream
         resetDelta();
     }
 
-    public MyDataInputStream(InputStream in) throws IOException
+    public OmaInputStream(InputStream in) throws IOException
     {
         super(in);
 

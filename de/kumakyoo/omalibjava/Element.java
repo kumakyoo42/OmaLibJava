@@ -30,7 +30,43 @@ abstract public class Element
         this.tags = null;
     }
 
-    void readTags(MyDataInputStream in) throws IOException
+    public void write(OmaOutputStream out, int features) throws IOException
+    {
+        writeGeo(out);
+        writeTags(out);
+        writeMetaData(out,features);
+    }
+
+    abstract public void writeGeo(OmaOutputStream out) throws IOException;
+
+    public void writeTags(OmaOutputStream out) throws IOException
+    {
+        out.writeSmallInt(tags.size());
+        for (String key:tags.keySet())
+        {
+            out.writeString(key);
+            out.writeString(tags.get(key));
+        }
+    }
+
+    public void writeMetaData(OmaOutputStream out, int features) throws IOException
+    {
+        if ((features&2)!=0)
+            out.writeLong(id);
+        if ((features&4)!=0)
+            out.writeSmallInt(version);
+        if ((features&8)!=0)
+            out.writeLong(timestamp);
+        if ((features&16)!=0)
+            out.writeLong(changeset);
+        if ((features&32)!=0)
+        {
+            out.writeInt(uid);
+            out.writeString(user);
+        }
+    }
+
+    void readTags(OmaInputStream in) throws IOException
     {
         tags = new HashMap<>();
         int count = in.readSmallInt();
@@ -38,7 +74,7 @@ abstract public class Element
             tags.put(in.readString(),in.readString());
     }
 
-    void readMeta(MyDataInputStream in, int features) throws IOException
+    void readMeta(OmaInputStream in, int features) throws IOException
     {
         if ((features&2)!=0)
             id = in.readLong();

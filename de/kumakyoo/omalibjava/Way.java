@@ -7,7 +7,7 @@ public class Way extends Element
     public int[] lon;
     public int[] lat;
 
-    public Way(MyDataInputStream in, String key, String value) throws IOException
+    public Way(OmaInputStream in, String key, String value) throws IOException
     {
         super(key,value);
         int count = in.readSmallInt();
@@ -20,6 +20,16 @@ public class Way extends Element
         }
     }
 
+    public void writeGeo(OmaOutputStream out) throws IOException
+    {
+        out.writeSmallInt(lon.length);
+        for (int k=0;k<lon.length;k++)
+        {
+            out.writeDeltaX(lon[k]);
+            out.writeDeltaY(lat[k]);
+        }
+    }
+    
     public String toString()
     {
         StringBuffer b = new StringBuffer();

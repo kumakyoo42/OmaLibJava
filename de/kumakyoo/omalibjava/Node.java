@@ -7,13 +7,19 @@ public class Node extends Element
     public int lon;
     public int lat;
 
-    public Node(MyDataInputStream in, String key, String value) throws IOException
+    public Node(OmaInputStream in, String key, String value) throws IOException
     {
         super(key,value);
         lon = in.readDeltaX();
         lat = in.readDeltaY();
     }
 
+    public void writeGeo(OmaOutputStream out) throws IOException
+    {
+        out.writeDeltaX(lon);
+        out.writeDeltaY(lat);
+    }
+    
     public String toString()
     {
         StringBuffer b = new StringBuffer();
