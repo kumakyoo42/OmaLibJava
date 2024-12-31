@@ -18,8 +18,8 @@ classpath, for example with: `javac -cp omalibjava.jar MyApp.java`
 Wenn running your application, you need to add `omalibjava.jar` to the
 classpath, for example with: `java -classpath .:omalibjava.jar MyApp`
 
-See the [description of api](/API.md) for details on how to use the
-library.
+See the [description of the api](/api/API.md) for details on how to use
+the library.
 
 ## Build
 

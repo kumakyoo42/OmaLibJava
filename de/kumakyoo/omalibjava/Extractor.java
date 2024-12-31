@@ -35,7 +35,7 @@ public class Extractor
         name = new ArrayList<>();
     }
 
-    public void setExtract(Filter f, String filename)
+    public void addExtract(Filter f, String filename)
     {
         filter.add(f);
         name.add(filename);

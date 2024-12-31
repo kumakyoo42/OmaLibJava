@@ -59,6 +59,11 @@ public class OmaOutputStream extends DataOutputStream
         write(bytes,0,bytes.length);
     }
 
+    public void resetDelta()
+    {
+        lastx = lasty = 0;
+    }
+
     public void writeDeltaX(int val) throws IOException
     {
         lastx = delta(lastx,val);
@@ -69,12 +74,7 @@ public class OmaOutputStream extends DataOutputStream
         lasty = delta(lasty,val);
     }
 
-    public void resetDelta()
-    {
-        lastx = lasty = 0;
-    }
-
-    public int delta(int last, int val) throws IOException
+    private int delta(int last, int val) throws IOException
     {
         int delta = val-last;
         if (delta>=-32767 && delta<=32767)
@@ -92,12 +92,14 @@ public class OmaOutputStream extends DataOutputStream
 
     public long getPosition() throws IOException
     {
+        if (fc==null) return 0;
         out.flush();
         return fc.position();
     }
 
     public void setPosition(long pos) throws IOException
     {
+        if (fc==null) return;
         out.flush();
         fc.position(pos);
     }

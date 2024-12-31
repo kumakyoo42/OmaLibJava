@@ -29,8 +29,8 @@ public class Extract
 
         Extractor e = new Extractor(args[0]);
 
-        e.setExtract(city1,"ochtrup.oma");
-        e.setExtract(trees_of_city2,"peaks_of_deutschneudorf.oma");
+        e.addExtract(city1,"ochtrup.oma");
+        e.addExtract(trees_of_city2,"peaks_of_deutschneudorf.oma");
 
         e.run();
     }
