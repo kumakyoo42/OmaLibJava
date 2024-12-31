@@ -391,42 +391,4 @@ public class OmaReader
     {
         if (!b) throw new IOException(msg);
     }
-
-    class ChunkTableEntry
-    {
-        long start;
-        byte type;
-        BoundingBox bounds;
-
-        public ChunkTableEntry(long start, byte type, BoundingBox bounds)
-        {
-            this.start = start;
-            this.type = type;
-            this.bounds = bounds;
-        }
-    }
-
-    class BlockTableEntry
-    {
-        long start;
-        String key;
-
-        public BlockTableEntry(long start, String key)
-        {
-            this.start = start;
-            this.key = key;
-        }
-    }
-
-    class SliceTableEntry
-    {
-        long start;
-        String value;
-
-        public SliceTableEntry(long start, String value)
-        {
-            this.start = start;
-            this.value = value;
-        }
-    }
 }
