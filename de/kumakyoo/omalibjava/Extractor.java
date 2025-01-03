@@ -19,7 +19,7 @@ public class Extractor
 
     private int features;
 
-    private BoundingBox globalBounds;
+    private BoundingBox[] globalBounds;
     private ChunkTableEntry[] chunkTable;
     private BlockTableEntry[] blockTable;
     private SliceTableEntry[] sliceTable;
@@ -59,7 +59,10 @@ public class Extractor
             extractChunk(i);
 
         for (int i=0;i<outCount;i++)
+        {
             writeChunkTable(i);
+            writeBoundingBox(i);
+        }
 
         closeFiles();
     }
@@ -95,6 +98,25 @@ public class Extractor
 
         out[i].setPosition(21);
         out[i].writeLong(start);
+    }
+
+    private void writeBoundingBox(int i) throws IOException
+    {
+        out[i].setPosition(5);
+        if (globalBounds[i]==null)
+        {
+            out[i].writeInt(Integer.MAX_VALUE);
+            out[i].writeInt(Integer.MAX_VALUE);
+            out[i].writeInt(Integer.MAX_VALUE);
+            out[i].writeInt(Integer.MAX_VALUE);
+        }
+        else
+        {
+            out[i].writeInt(globalBounds[i].minlon);
+            out[i].writeInt(globalBounds[i].minlat);
+            out[i].writeInt(globalBounds[i].maxlon);
+            out[i].writeInt(globalBounds[i].maxlat);
+        }
     }
 
     private void extractChunk(int chunk) throws IOException
@@ -358,6 +380,16 @@ public class Extractor
             outChunkTable[c][chunk].bounds.maxlon = Math.max(outChunkTable[c][chunk].bounds.maxlon,lon);
             outChunkTable[c][chunk].bounds.maxlat = Math.max(outChunkTable[c][chunk].bounds.maxlat,lat);
         }
+
+        if (globalBounds[c]==null)
+            globalBounds[c] = new BoundingBox(lon,lat,lon,lat);
+        else
+        {
+            globalBounds[c].minlon = Math.min(globalBounds[c].minlon,lon);
+            globalBounds[c].minlat = Math.min(globalBounds[c].minlat,lat);
+            globalBounds[c].maxlon = Math.max(globalBounds[c].maxlon,lon);
+            globalBounds[c].maxlat = Math.max(globalBounds[c].maxlat,lat);
+        }
     }
 
     private void openFiles() throws IOException
@@ -406,7 +438,12 @@ public class Extractor
             out[i].writeLong(0);
         }
 
-        globalBounds = new BoundingBox(in.readInt(),in.readInt(),in.readInt(),in.readInt());
+        // we do not need input bounding box
+        in.readInt();
+        in.readInt();
+        in.readInt();
+        in.readInt();
+
         long chunkTablePos = in.readLong();
         copyTypeTable();
 
@@ -414,6 +451,7 @@ public class Extractor
 
         int count = in.readInt();
         chunkTable = new ChunkTableEntry[count];
+        globalBounds = new BoundingBox[count];
         for (int i=0;i<count;i++)
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
     }
