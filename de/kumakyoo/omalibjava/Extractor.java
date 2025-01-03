@@ -77,10 +77,20 @@ public class Extractor
             {
                 out[i].writeLong(e.start);
                 out[i].writeByte(e.type);
-                out[i].writeInt(e.bounds.minlon);
-                out[i].writeInt(e.bounds.minlat);
-                out[i].writeInt(e.bounds.maxlon);
-                out[i].writeInt(e.bounds.maxlat);
+                if (e.bounds==null)
+                {
+                    out[i].writeInt(Integer.MAX_VALUE);
+                    out[i].writeInt(Integer.MAX_VALUE);
+                    out[i].writeInt(Integer.MAX_VALUE);
+                    out[i].writeInt(Integer.MAX_VALUE);
+                }
+                else
+                {
+                    out[i].writeInt(e.bounds.minlon);
+                    out[i].writeInt(e.bounds.minlat);
+                    out[i].writeInt(e.bounds.maxlon);
+                    out[i].writeInt(e.bounds.maxlat);
+                }
             }
 
         out[i].setPosition(21);
@@ -96,7 +106,7 @@ public class Extractor
             chunkUsed[i] = filter.get(i).needsChunk(chunkTable[chunk].type,chunkTable[chunk].bounds);
             if (chunkUsed[i])
             {
-                outChunkTable[i][chunk] = new ChunkTableEntry(out[i].getPosition(),chunkTable[chunk].type,chunkTable[chunk].bounds);
+                outChunkTable[i][chunk] = new ChunkTableEntry(out[i].getPosition(),chunkTable[chunk].type,null);
                 out[i].writeInt(0);
             }
             needed |= chunkUsed[i];
@@ -262,6 +272,7 @@ public class Extractor
                         }
                         count[j]++;
                         e.write(out[j],features);
+                        adjustBoundingBoxOfChunk(j,chunk,e);
                     }
                 }
         }
@@ -312,6 +323,41 @@ public class Extractor
         e.readMeta(in,features);
 
         return e;
+    }
+
+    private void adjustBoundingBoxOfChunk(int c, int chunk, Element e)
+    {
+        switch (chunkTable[chunk].type)
+        {
+        case 'N':
+            Node n = (Node)e;
+            adjustBoundingBoxOfChunk(c,chunk,n.lon,n.lat);
+            break;
+        case 'W':
+            Way w = (Way)e;
+            for (int i=0;i<w.lon.length;i++)
+                adjustBoundingBoxOfChunk(c,chunk,w.lon[i],w.lat[i]);
+            break;
+        case 'A':
+            Area a = (Area)e;
+            for (int i=0;i<a.lon.length;i++)
+                adjustBoundingBoxOfChunk(c,chunk,a.lon[i],a.lat[i]);
+            // we can skip holes
+            break;
+        }
+    }
+
+    private void adjustBoundingBoxOfChunk(int c, int chunk, int lon, int lat)
+    {
+        if (outChunkTable[c][chunk].bounds==null)
+            outChunkTable[c][chunk].bounds = new BoundingBox(lon,lat,lon,lat);
+        else
+        {
+            outChunkTable[c][chunk].bounds.minlon = Math.min(outChunkTable[c][chunk].bounds.minlon,lon);
+            outChunkTable[c][chunk].bounds.minlat = Math.min(outChunkTable[c][chunk].bounds.minlat,lat);
+            outChunkTable[c][chunk].bounds.maxlon = Math.max(outChunkTable[c][chunk].bounds.maxlon,lon);
+            outChunkTable[c][chunk].bounds.maxlat = Math.max(outChunkTable[c][chunk].bounds.maxlat,lat);
+        }
     }
 
     private void openFiles() throws IOException

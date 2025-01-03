@@ -75,6 +75,7 @@ public class OmaInputStream extends DataInputStream
 
     //////////////////////////////////////////////////////////////////
 
+    // note: This returns only a rough estimate due to usage of buffers
     public long getPosition() throws IOException
     {
         return fc==null?0:fc.position();
