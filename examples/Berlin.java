@@ -22,21 +22,16 @@ public class Berlin
 
         r.setFilter(new AndFilter(berlin,new TypeFilter("N")));
         System.out.println("nodes in berlin: "+r.count());
-        r.reset();
         r.setFilter(new AndFilter(berlin,new TypeFilter("W")));
         System.out.println("ways in berlin: "+r.count());
-        r.reset();
         r.setFilter(new AndFilter(berlin,new TypeFilter("A")));
         System.out.println("areas in berlin: "+r.count());
         System.out.println();
 
-        r.reset();
         r.setFilter(new AndFilter(berlin,new TypeFilter("N"),new BlockSliceFilter("natural","tree")));
         System.out.println("tree nodes in berlin: "+r.count());
-        r.reset();
         r.setFilter(new AndFilter(berlin,new TypeFilter("W"),new BlockFilter("highway"),new TagFilter("lit","yes")));
         System.out.println("lit highways in berlin: "+r.count());
-        r.reset();
         r.setFilter(new AndFilter(berlin,new TypeFilter("A"),new BlockFilter("area:highway")));
         System.out.println("area:highways in berlin: "+r.count());
         r.close();

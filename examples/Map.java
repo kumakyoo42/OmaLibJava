@@ -33,7 +33,6 @@ public class Map
             if (a==null) break;
             bounding_areas.add(a);
         }
-        r.reset();
 
         Polygon bounds = new Polygon(bounding_areas.toArray(new Area[bounding_areas.size()]));
         BoundingBox bb = bounds.getBoundingBox();
@@ -67,7 +66,6 @@ public class Map
                 foreground.append("f\n");
             }
         }
-        r.reset();
 
         r.setFilter(new AndFilter(new TypeFilter("W"),f4,new BlockFilter("highway")));
         foreground.append("0.5 g n\n");
@@ -85,7 +83,6 @@ public class Map
                 foreground.append("s\n");
             }
         }
-        r.reset();
 
         r.setFilter(new AndFilter(new TypeFilter("N"),f4,new BlockSliceFilter("natural","peak")));
         foreground.append("0.5 0.2 0 c n\n");

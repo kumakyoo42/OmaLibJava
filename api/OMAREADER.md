@@ -40,9 +40,8 @@ the file appears not to be in
     reset()
 
 Resets the `OmaReader`. After the reset, the `OmaReader` is ready to
-read the same file again, probably using a different filter. This
-makes it possible to run several queries without having to create a
-new `OmaReader` every time.
+read the same file with the same filter again. `reset()` is
+automatically called, whenever a new filter is set.
 
     close() throws IOException
 
@@ -52,12 +51,8 @@ Closes the OmaReader.
 
     setFilter(Filter filter)
 
-Sets a new filter to use. This method should only be used before
-querying the data with `next()` or `count()`. It can be safely used
-before or after using `reset()`.
-
-**Please note:** The result of using this command with other timing, is not
-defined.
+Sets a new filter to use. This method automatically resets the
+`OmaReader`.
 
     Filter getFilter()
 

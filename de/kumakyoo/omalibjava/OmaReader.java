@@ -36,7 +36,7 @@ public class OmaReader
     public OmaReader(String filename) throws IOException
     {
         this.filename = filename;
-        filter = new Filter();
+        setFilter(new Filter());
         key = value = null;
 
         openFile();
@@ -62,6 +62,7 @@ public class OmaReader
     public void setFilter(Filter filter)
     {
         this.filter = filter;
+        reset();
     }
 
     public boolean containsBlocks(byte type, String key)
@@ -246,8 +247,6 @@ public class OmaReader
         chunkTable = new ChunkTableEntry[count];
         for (int i=0;i<count;i++)
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
-
-        reset();
     }
 
     private void readTypeTable() throws IOException
