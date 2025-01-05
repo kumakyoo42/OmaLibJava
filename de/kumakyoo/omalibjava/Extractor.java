@@ -19,7 +19,6 @@ public class Extractor
 
     private int features;
 
-    private BoundingBox[] globalBounds;
     private ChunkTableEntry[] chunkTable;
     private BlockTableEntry[] blockTable;
     private SliceTableEntry[] sliceTable;
@@ -102,8 +101,24 @@ public class Extractor
 
     private void writeBoundingBox(int i) throws IOException
     {
+        BoundingBox bounds = null;
+
+        for (ChunkTableEntry e: outChunkTable[i])
+            if (e!=null)
+            {
+                if (bounds==null)
+                    bounds = new BoundingBox(e.bounds);
+                else
+                {
+                    bounds.minlon = Math.min(bounds.minlon,e.bounds.minlon);
+                    bounds.minlat = Math.min(bounds.minlat,e.bounds.minlat);
+                    bounds.maxlon = Math.max(bounds.maxlon,e.bounds.maxlon);
+                    bounds.maxlat = Math.max(bounds.maxlat,e.bounds.maxlat);
+                }
+            }
+
         out[i].setPosition(5);
-        if (globalBounds[i]==null)
+        if (bounds==null)
         {
             out[i].writeInt(Integer.MAX_VALUE);
             out[i].writeInt(Integer.MAX_VALUE);
@@ -112,10 +127,10 @@ public class Extractor
         }
         else
         {
-            out[i].writeInt(globalBounds[i].minlon);
-            out[i].writeInt(globalBounds[i].minlat);
-            out[i].writeInt(globalBounds[i].maxlon);
-            out[i].writeInt(globalBounds[i].maxlat);
+            out[i].writeInt(bounds.minlon);
+            out[i].writeInt(bounds.minlat);
+            out[i].writeInt(bounds.maxlon);
+            out[i].writeInt(bounds.maxlat);
         }
     }
 
@@ -380,16 +395,6 @@ public class Extractor
             outChunkTable[c][chunk].bounds.maxlon = Math.max(outChunkTable[c][chunk].bounds.maxlon,lon);
             outChunkTable[c][chunk].bounds.maxlat = Math.max(outChunkTable[c][chunk].bounds.maxlat,lat);
         }
-
-        if (globalBounds[c]==null)
-            globalBounds[c] = new BoundingBox(lon,lat,lon,lat);
-        else
-        {
-            globalBounds[c].minlon = Math.min(globalBounds[c].minlon,lon);
-            globalBounds[c].minlat = Math.min(globalBounds[c].minlat,lat);
-            globalBounds[c].maxlon = Math.max(globalBounds[c].maxlon,lon);
-            globalBounds[c].maxlat = Math.max(globalBounds[c].maxlat,lat);
-        }
     }
 
     private void openFiles() throws IOException
@@ -451,7 +456,6 @@ public class Extractor
 
         int count = in.readInt();
         chunkTable = new ChunkTableEntry[count];
-        globalBounds = new BoundingBox[count];
         for (int i=0;i<count;i++)
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
     }

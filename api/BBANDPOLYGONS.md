@@ -11,7 +11,7 @@ bounding boxes and polygones are always considered to be inside.
 
     BoundingBox(int minlon, int minlat, int maxlon, int maxlat)
     BoundingBox(double minlon, double minlat, double maxlon, double maxlat)
-    BoundingBox(TightBoundingBox tbb)
+    BoundingBox(BoundingBox bb)
 
     TightBoundingBox(int minlon, int minlat, int maxlon, int maxlat)
     TightBoundingBox(double minlon, double minlat, double maxlon, double maxlat)
