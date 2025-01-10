@@ -93,6 +93,10 @@ type table.
 These methods return true, if the corresponding bit of the features
 byte is set to 1.
 
+    public BoundingBox getBoundingBox()
+
+Returns the global bounding box of the Oma file.
+
     boolean containsBlocks(byte type, String key)
     boolean containsSlices(byte type, String key, String value)
     Set<String> keySet(byte type)
@@ -103,5 +107,3 @@ blocks and slices, called type table. These four methods query this
 table. The first two just tell, if a key or a key-value has been used
 for a certain chunk type. The last two provide access to a set of all
 keys used and a set of all values of a given key used.
-
-

@@ -65,6 +65,11 @@ public class OmaReader
         reset();
     }
 
+    public BoundingBox getBoundingBox()
+    {
+        return globalBounds;
+    }
+
     public boolean containsBlocks(byte type, String key)
     {
         if (!typeTable.containsKey(type)) return false;
