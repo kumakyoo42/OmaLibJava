@@ -10,6 +10,22 @@ public class Area extends Element
     public int[][] holes_lon;
     public int[][] holes_lat;
 
+    public Area(int[] lon, int[] lat)
+    {
+        this.lon = lon;
+        this.lat = lat;
+        holes_lon = new int[0][];
+        holes_lat = new int[0][];
+    }
+
+    public Area(int[] lon, int[] lat, int[][] holes_lon, int[][] holes_lat)
+    {
+        this.lon = lon;
+        this.lat = lat;
+        this.holes_lon = holes_lon;
+        this.holes_lat = holes_lat;
+    }
+
     public Area(OmaInputStream in, String key, String value) throws IOException
     {
         super(key,value);

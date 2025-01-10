@@ -7,6 +7,12 @@ public class Way extends Element
     public int[] lon;
     public int[] lat;
 
+    public Way(int[] lon, int[] lat)
+    {
+        this.lon = lon;
+        this.lat = lat;
+    }
+
     public Way(OmaInputStream in, String key, String value) throws IOException
     {
         super(key,value);
@@ -29,7 +35,7 @@ public class Way extends Element
             out.writeDeltaY(lat[k]);
         }
     }
-    
+
     public String toString()
     {
         StringBuffer b = new StringBuffer();

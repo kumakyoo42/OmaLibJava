@@ -17,10 +17,8 @@ abstract public class Element
 
     public Map<String, String> tags;
 
-    public Element(String key, String value)
+    protected Element()
     {
-        this.key = key;
-        this.value = value;
         this.id = Long.MIN_VALUE;
         this.version = Integer.MIN_VALUE;
         this.timestamp = Long.MIN_VALUE;
@@ -28,6 +26,15 @@ abstract public class Element
         this.uid = Integer.MIN_VALUE;
         this.user = null;
         this.tags = null;
+        key = null;
+        value = null;
+    }
+
+    protected Element(String key, String value)
+    {
+        this();
+        this.key = key;
+        this.value = value;
     }
 
     public void write(OmaOutputStream out, int features) throws IOException

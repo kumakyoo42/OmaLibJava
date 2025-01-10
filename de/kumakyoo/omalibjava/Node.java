@@ -7,6 +7,12 @@ public class Node extends Element
     public int lon;
     public int lat;
 
+    public Node(int lon, int lat)
+    {
+        this.lon = lon;
+        this.lat = lat;
+    }
+
     public Node(OmaInputStream in, String key, String value) throws IOException
     {
         super(key,value);
@@ -19,7 +25,7 @@ public class Node extends Element
         out.writeDeltaX(lon);
         out.writeDeltaY(lat);
     }
-    
+
     public String toString()
     {
         StringBuffer b = new StringBuffer();
