@@ -161,7 +161,7 @@ public class Map
         double x = (lon2x(lon)-left)*factor;
         double y = (lat2y(lat)-bottom)*factor;
 
-        return (Math.round(x*1000)/1000)+" "+(Math.round(y*1000)/1000)+" ";
+        return (Math.round(x*1000)/1000.0)+" "+(Math.round(y*1000)/1000.0)+" ";
     }
 
     //////////////////////////////////////////////////////////////////
