@@ -381,6 +381,9 @@ public class OmaReader
         case 'A':
             e = new Area(in,key,value);
             break;
+        case 'C':
+            e = new Collection(in,key,value);
+            break;
         default:
             enforce(false, "unknown element type '"+((char)chunkTable[chunk].type)+"'");
         }
