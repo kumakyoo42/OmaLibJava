@@ -83,6 +83,19 @@ public class Collection extends Element
         out.writeSmallInt(0);
     }
 
+    public boolean isInside(Container c)
+    {
+        for (int i=0;i<node_lon.length;i++)
+            if (!c.contains(node_lon[i],node_lat[i]))
+                return false;
+
+        for (int i=0;i<way_lon.length;i++)
+            if (!c.contains(way_lon[i],way_lat[i]))
+                return false;
+
+        return true;
+    }
+
     public String toString()
     {
         StringBuffer b = new StringBuffer();

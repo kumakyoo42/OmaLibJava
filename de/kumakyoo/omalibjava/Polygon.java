@@ -3,7 +3,7 @@ package de.kumakyoo.omalibjava;
 import java.util.*;
 import java.io.*;
 
-public class Polygon
+public class Polygon implements Container
 {
     private static final int DEFAULT_STRIPE_SIZE = 100000;
 

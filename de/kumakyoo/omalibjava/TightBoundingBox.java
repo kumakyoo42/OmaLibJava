@@ -2,7 +2,7 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class TightBoundingBox extends BoundingBox
+public class TightBoundingBox extends BoundingBox implements Container
 {
     public TightBoundingBox(int minlon, int minlat, int maxlon, int maxlat)
     {

@@ -29,13 +29,7 @@ public class BoundingBoxFilter extends Filter
 
     public boolean keep(Element e)
     {
-        if (e instanceof Node)
-            return bounds.contains(((Node)e).lon,((Node)e).lat);
-        if (e instanceof Way)
-            return bounds.contains(((Way)e).lon,((Way)e).lat);
-        if (e instanceof Area)
-            return bounds.contains(((Area)e).lon,((Area)e).lat);
-        return false;
+        return e.isInside(bounds);
     }
 
     public boolean countable()

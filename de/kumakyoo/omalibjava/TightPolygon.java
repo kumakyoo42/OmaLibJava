@@ -2,7 +2,7 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class TightPolygon extends Polygon
+public class TightPolygon extends Polygon implements Container
 {
     public TightPolygon(String filename) throws IOException
     {

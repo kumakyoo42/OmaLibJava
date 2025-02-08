@@ -98,6 +98,8 @@ abstract public class Element
         }
     }
 
+    abstract public boolean isInside(Container c);
+
     public String toString()
     {
         StringBuffer b = new StringBuffer();

@@ -352,6 +352,9 @@ public class Extractor
         case 'A':
             e = new Area(in,key,value);
             break;
+        case 'C':
+            e = new Collection(in,key,value);
+            break;
         default:
             enforce(false, "unknown element type '"+((char)chunkTable[chunk].type)+"'");
         }
@@ -380,6 +383,14 @@ public class Extractor
             for (int i=0;i<a.lon.length;i++)
                 adjustBoundingBoxOfChunk(c,chunk,a.lon[i],a.lat[i]);
             // we can skip holes
+            break;
+        case 'C':
+            Collection col = (Collection)e;
+            for (int i=0;i<col.node_lon.length;i++)
+                adjustBoundingBoxOfChunk(c,chunk,col.node_lon[i],col.node_lat[i]);
+            for (int i=0;i<col.way_lon.length;i++)
+                for (int j=0;j<col.way_lon[i].length;j++)
+                    adjustBoundingBoxOfChunk(c,chunk,col.way_lon[i][j],col.way_lat[i][j]);
             break;
         }
     }

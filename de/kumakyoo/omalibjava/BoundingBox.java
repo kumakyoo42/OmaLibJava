@@ -2,7 +2,7 @@ package de.kumakyoo.omalibjava;
 
 import java.io.*;
 
-public class BoundingBox
+public class BoundingBox implements Container
 {
     public int minlon;
     public int minlat;

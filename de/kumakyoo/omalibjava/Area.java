@@ -74,6 +74,11 @@ public class Area extends Element
         }
     }
 
+    public boolean isInside(Container c)
+    {
+        return c.contains(lon,lat);
+    }
+
     public String toString()
     {
         StringBuffer b = new StringBuffer();

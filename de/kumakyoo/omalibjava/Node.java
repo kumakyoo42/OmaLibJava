@@ -26,6 +26,11 @@ public class Node extends Element
         out.writeDeltaY(lat);
     }
 
+    public boolean isInside(Container c)
+    {
+        return c.contains(lon,lat);
+    }
+
     public String toString()
     {
         StringBuffer b = new StringBuffer();
