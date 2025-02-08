@@ -64,3 +64,20 @@ loop. Every hole is itself a closed loop (again the first coordinate
 is not repeated at the end). An area may contain zero holes.
 
 Values are given in WGS84 multiplied by 10,000,000.
+
+## Collection
+
+Collections provide the following fields:
+
+    String[] node_role;
+    int[] node_lon;
+    int[] node_lat;
+
+    String[] way_role;
+    int[][] way_lon;
+    int[][] way_lat;
+
+The first three items define a list of nodes with a role. The last
+three items define a list of ways with a role.
+
+Values are given in WGS84 multiplied by 10,000,000.
