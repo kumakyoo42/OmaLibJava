@@ -4,38 +4,31 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-public class OmaReader
+public class OmaReader extends OmaTool
 {
-    private String filename;
-    private Filter filter;
+    protected Filter filter;
 
-    private OmaInputStream in;
-    private OmaInputStream save;
+    protected OmaInputStream save;
 
-    private int features;
+    protected BoundingBox globalBounds;
 
-    private BoundingBox globalBounds;
-    private ChunkTableEntry[] chunkTable;
-    private BlockTableEntry[] blockTable;
-    private SliceTableEntry[] sliceTable;
+    protected Map<Byte,Map<String,Set<String>>> typeTable;
 
-    private Map<Byte,Map<String,Set<String>>> typeTable;
+    protected boolean chunkFinished;
+    protected int chunk;
+    protected boolean blockFinished;
+    protected int block;
+    protected boolean sliceFinished;
+    protected int slice;
+    protected int elementCount;
+    protected int element;
 
-    private boolean chunkFinished;
-    private int chunk;
-    private boolean blockFinished;
-    private int block;
-    private boolean sliceFinished;
-    private int slice;
-    private int elementCount;
-    private int element;
-
-    private String key;
-    private String value;
+    protected String key;
+    protected String value;
 
     public OmaReader(String filename) throws IOException
     {
-        this.filename = filename;
+        super(filename);
         setFilter(new Filter());
         key = value = null;
 
@@ -231,7 +224,7 @@ public class OmaReader
 
     //////////////////////////////////////////////////////////////////
 
-    private void openFile() throws IOException
+    protected void openFile() throws IOException
     {
         in = new OmaInputStream(filename);
 
@@ -254,7 +247,7 @@ public class OmaReader
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
     }
 
-    private void readTypeTable() throws IOException
+    protected void readTypeTable() throws IOException
     {
         OmaInputStream orig = in;
         if ((features&1)!=0)
@@ -292,7 +285,7 @@ public class OmaReader
         in = orig;
     }
 
-    private boolean readNextChunk() throws IOException
+    protected boolean readNextChunk() throws IOException
     {
         chunkFinished = false;
         chunk++;
@@ -303,7 +296,7 @@ public class OmaReader
         return true;
     }
 
-    private void readChunk() throws IOException
+    protected void readChunk() throws IOException
     {
         in.setPosition(chunkTable[chunk].start);
         long blockTablePos = chunkTable[chunk].start+in.readInt();
@@ -315,7 +308,7 @@ public class OmaReader
             blockTable[i] = new BlockTableEntry(chunkTable[chunk].start+in.readInt(),in.readString());
     }
 
-    private boolean readNextBlock() throws IOException
+    protected boolean readNextBlock() throws IOException
     {
         blockFinished = false;
         block++;
@@ -330,7 +323,7 @@ public class OmaReader
         return true;
     }
 
-    private void readBlock() throws IOException
+    protected void readBlock() throws IOException
     {
         in.setPosition(blockTable[block].start);
         long sliceTablePos = blockTable[block].start+in.readInt();
@@ -342,7 +335,7 @@ public class OmaReader
             sliceTable[i] = new SliceTableEntry(blockTable[block].start+in.readInt(),in.readString());
     }
 
-    private boolean readNextSlice() throws IOException
+    protected boolean readNextSlice() throws IOException
     {
         sliceFinished = false;
         slice++;
@@ -355,7 +348,7 @@ public class OmaReader
         return true;
     }
 
-    private void readSlice() throws IOException
+    protected void readSlice() throws IOException
     {
         in.resetDelta();
         in.setPosition(sliceTable[slice].start);
@@ -366,36 +359,8 @@ public class OmaReader
             in = new OmaInputStream(new BufferedInputStream(new InflaterInputStream(in)));
     }
 
-    private Element readElement() throws IOException
+    protected Element readElement() throws IOException
     {
-        Element e = null;
-
-        switch (chunkTable[chunk].type)
-        {
-        case 'N':
-            e = new Node(in,key,value);
-            break;
-        case 'W':
-            e = new Way(in,key,value);
-            break;
-        case 'A':
-            e = new Area(in,key,value);
-            break;
-        case 'C':
-            e = new Collection(in,key,value);
-            break;
-        default:
-            enforce(false, "unknown element type '"+((char)chunkTable[chunk].type)+"'");
-        }
-
-        e.readTags(in);
-        e.readMeta(in,features);
-
-        return e;
-    }
-
-    private void enforce(boolean b, String msg) throws IOException
-    {
-        if (!b) throw new IOException(msg);
+        return readElement(chunk,key,value);
     }
 }

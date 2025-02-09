@@ -4,32 +4,23 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-public class Extractor
+public class Extractor extends OmaTool
 {
-    private String filename;
+    protected int outCount;
+    protected List<Filter> filter;
+    protected List<String> name;
+    protected boolean[] chunkUsed;
+    protected boolean[] blockUsed;
 
-    private int outCount;
-    private List<Filter> filter;
-    private List<String> name;
-    private boolean[] chunkUsed;
-    private boolean[] blockUsed;
+    protected OmaOutputStream[] out;
 
-    private OmaInputStream in;
-    private OmaOutputStream[] out;
-
-    private int features;
-
-    private ChunkTableEntry[] chunkTable;
-    private BlockTableEntry[] blockTable;
-    private SliceTableEntry[] sliceTable;
-
-    private ChunkTableEntry[][] outChunkTable;
-    private BlockTableEntry[][] outBlockTable;
-    private SliceTableEntry[][] outSliceTable;
+    protected ChunkTableEntry[][] outChunkTable;
+    protected BlockTableEntry[][] outBlockTable;
+    protected SliceTableEntry[][] outSliceTable;
 
     public Extractor(String filename)
     {
-        this.filename = filename;
+        super(filename);
         filter = new ArrayList<>();
         name = new ArrayList<>();
     }
@@ -66,7 +57,7 @@ public class Extractor
         closeFiles();
     }
 
-    private void writeChunkTable(int i) throws IOException
+    protected void writeChunkTable(int i) throws IOException
     {
         long start = out[i].getPosition();
         int count = 0;
@@ -99,7 +90,7 @@ public class Extractor
         out[i].writeLong(start);
     }
 
-    private void writeBoundingBox(int i) throws IOException
+    protected void writeBoundingBox(int i) throws IOException
     {
         BoundingBox bounds = null;
 
@@ -134,7 +125,7 @@ public class Extractor
         }
     }
 
-    private void extractChunk(int chunk) throws IOException
+    protected void extractChunk(int chunk) throws IOException
     {
         chunkUsed = new boolean[outCount];
         boolean needed = false;
@@ -171,7 +162,7 @@ public class Extractor
                     outChunkTable[i][chunk] = null;
     }
 
-    private boolean writeBlockTable(int i, int chunk) throws IOException
+    protected boolean writeBlockTable(int i, int chunk) throws IOException
     {
         long tablepos = out[i].getPosition();
         out[i].setPosition(outChunkTable[i][chunk].start);
@@ -195,7 +186,7 @@ public class Extractor
         return true;
     }
 
-    private void extractBlock(int chunk, int block) throws IOException
+    protected void extractBlock(int chunk, int block) throws IOException
     {
         blockUsed = new boolean[outCount];
         boolean needed = false;
@@ -233,7 +224,7 @@ public class Extractor
                     outBlockTable[i][block] = null;
     }
 
-    private boolean writeSliceTable(int i, int chunk, int block) throws IOException
+    protected boolean writeSliceTable(int i, int chunk, int block) throws IOException
     {
         long tablepos = out[i].getPosition();
         out[i].setPosition(outBlockTable[i][block].start);
@@ -257,7 +248,7 @@ public class Extractor
         return true;
     }
 
-    private void extractSlice(int chunk, int block, int slice) throws IOException
+    protected void extractSlice(int chunk, int block, int slice) throws IOException
     {
         boolean[] sliceUsed = new boolean[outCount];
         boolean needed = false;
@@ -337,35 +328,7 @@ public class Extractor
         in = save;
     }
 
-    private Element readElement(int chunk, String key, String value) throws IOException
-    {
-        Element e = null;
-
-        switch (chunkTable[chunk].type)
-        {
-        case 'N':
-            e = new Node(in,key,value);
-            break;
-        case 'W':
-            e = new Way(in,key,value);
-            break;
-        case 'A':
-            e = new Area(in,key,value);
-            break;
-        case 'C':
-            e = new Collection(in,key,value);
-            break;
-        default:
-            enforce(false, "unknown element type '"+((char)chunkTable[chunk].type)+"'");
-        }
-
-        e.readTags(in);
-        e.readMeta(in,features);
-
-        return e;
-    }
-
-    private void adjustBoundingBoxOfChunk(int c, int chunk, Element e)
+    protected void adjustBoundingBoxOfChunk(int c, int chunk, Element e)
     {
         switch (chunkTable[chunk].type)
         {
@@ -395,7 +358,7 @@ public class Extractor
         }
     }
 
-    private void adjustBoundingBoxOfChunk(int c, int chunk, int lon, int lat)
+    protected void adjustBoundingBoxOfChunk(int c, int chunk, int lon, int lat)
     {
         if (outChunkTable[c][chunk].bounds==null)
             outChunkTable[c][chunk].bounds = new BoundingBox(lon,lat,lon,lat);
@@ -408,7 +371,7 @@ public class Extractor
         }
     }
 
-    private void openFiles() throws IOException
+    protected void openFiles() throws IOException
     {
         in = new OmaInputStream(filename);
 
@@ -417,14 +380,14 @@ public class Extractor
             out[i] = new OmaOutputStream(name.get(i));
     }
 
-    private void closeFiles() throws IOException
+    protected void closeFiles() throws IOException
     {
         in.close();
         for (int i=0;i<outCount;i++)
             out[i].close();
     }
 
-    private void copyHeader() throws IOException
+    protected void copyHeader() throws IOException
     {
         enforce(in.readByte()=='O', "oma-file expected");
         enforce(in.readByte()=='M', "oma-file expected");
@@ -471,7 +434,7 @@ public class Extractor
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
     }
 
-    private void copyTypeTable() throws IOException
+    protected void copyTypeTable() throws IOException
     {
         OmaOutputStream[] origout = new OmaOutputStream[outCount];
         DeflaterOutputStream[] dos = new DeflaterOutputStream[outCount];
@@ -533,10 +496,5 @@ public class Extractor
                 out[i] = origout[i];
             }
         in = orig;
-    }
-
-    private void enforce(boolean b, String msg) throws IOException
-    {
-        if (!b) throw new IOException(msg);
     }
 }
