@@ -98,7 +98,10 @@ public class Extractor extends OmaTool
             if (e!=null)
             {
                 if (bounds==null)
-                    bounds = new BoundingBox(e.bounds);
+                {
+                    if (e.bounds!=null)
+                        bounds = new BoundingBox(e.bounds);
+                }
                 else
                 {
                     bounds.minlon = Math.min(bounds.minlon,e.bounds.minlon);
@@ -299,7 +302,7 @@ public class Extractor extends OmaTool
                             }
                         }
                         count[j]++;
-                        e.write(out[j],features);
+                        e.write(out[j],features|(chunkTable[chunk].type=='C'?2:0));
                         adjustBoundingBoxOfChunk(j,chunk,e);
                     }
                 }
@@ -349,11 +352,7 @@ public class Extractor extends OmaTool
             break;
         case 'C':
             Collection col = (Collection)e;
-            for (int i=0;i<col.node_lon.length;i++)
-                adjustBoundingBoxOfChunk(c,chunk,col.node_lon[i],col.node_lat[i]);
-            for (int i=0;i<col.way_lon.length;i++)
-                for (int j=0;j<col.way_lon[i].length;j++)
-                    adjustBoundingBoxOfChunk(c,chunk,col.way_lon[i][j],col.way_lat[i][j]);
+            // nothing to do yet...
             break;
         }
     }

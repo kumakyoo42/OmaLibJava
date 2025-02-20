@@ -41,7 +41,8 @@ abstract class OmaTool
         }
 
         e.readTags(in);
-        e.readMeta(in,features);
+        e.readMembers(in);
+        e.readMeta(in,features|(chunkTable[chunk].type=='C'?2:0));
 
         return e;
     }

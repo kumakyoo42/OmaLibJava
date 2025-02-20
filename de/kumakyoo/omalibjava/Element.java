@@ -16,6 +16,7 @@ abstract public class Element
     public String value;
 
     public Map<String, String> tags;
+    public Member[] members;
 
     protected Element()
     {
@@ -41,6 +42,7 @@ abstract public class Element
     {
         writeGeo(out);
         writeTags(out);
+        writeMembers(out);
         writeMetaData(out,features);
     }
 
@@ -56,9 +58,20 @@ abstract public class Element
         }
     }
 
+    public void writeMembers(OmaOutputStream out) throws IOException
+    {
+        out.writeSmallInt(members.length);
+        for (Member m:members)
+        {
+            out.writeLong(m.id);
+            out.writeString(m.role);
+            out.writeSmallInt(m.nr);
+        }
+    }
+
     public void writeMetaData(OmaOutputStream out, int features) throws IOException
     {
-        if ((features&2)!=0)
+        if ((features&2)!=0 || this instanceof Collection)
             out.writeLong(id);
         if ((features&4)!=0)
             out.writeSmallInt(version);
@@ -79,6 +92,14 @@ abstract public class Element
         int count = in.readSmallInt();
         for (int i=0;i<count;i++)
             tags.put(in.readString(),in.readString());
+    }
+
+    void readMembers(OmaInputStream in) throws IOException
+    {
+        int count = in.readSmallInt();
+        members = new Member[count];
+        for (int i=0;i<count;i++)
+            members[i] = new Member(in.readLong(),in.readString(),in.readSmallInt());
     }
 
     void readMeta(OmaInputStream in, int features) throws IOException

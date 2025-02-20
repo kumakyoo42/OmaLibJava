@@ -109,6 +109,14 @@ public class Polygon implements Container
         return false;
     }
 
+    public boolean contains(BoundingBox b)
+    {
+        return contains(b.minlon,b.minlat)
+            || contains(b.minlon,b.maxlat)
+            || contains(b.maxlon,b.minlat)
+            || contains(b.maxlon,b.maxlat);
+    }
+
     private void polygonFromAreas(Area[] areas)
     {
         stripes = new HashMap<>();

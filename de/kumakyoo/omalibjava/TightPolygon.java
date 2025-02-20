@@ -45,4 +45,12 @@ public class TightPolygon extends Polygon implements Container
             if (!contains(lon[i],lat[i])) return false;
         return true;
     }
+
+    public boolean contains(BoundingBox b)
+    {
+        return contains(b.minlon,b.minlat)
+            && contains(b.minlon,b.maxlat)
+            && contains(b.maxlon,b.minlat)
+            && contains(b.maxlon,b.maxlat);
+    }
 }
