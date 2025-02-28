@@ -8,7 +8,7 @@ are interested in.
 
 Further more, the library provides classes for the elements contained
 in an Oma file (nodes, ways, areas), for bounding boxes, polygons and
-some helper classes for reading and writing oma files.
+some helper classes for reading and writing Oma files.
 
 To keep the documentation clear, each of these areas is described in a
 separate document:

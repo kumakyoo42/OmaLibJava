@@ -16,6 +16,7 @@ several fields that all elements share:
     String value
 
     Map<String, String> tags
+    Member[] members
 
 The first six entries are the meta information of the element, if
 present. If not present, the values are `Long.MIN_VALUE`,
@@ -24,7 +25,10 @@ present. If not present, the values are `Long.MIN_VALUE`,
 The two strings `key` and `value` are the key and value of the block
 and slice which contains this element.
 
-The tags of the element are provided as a map.
+The `tags` of the element are provided as a map.
+
+The `members` array contains the id, role and position of the
+collections this element is a member of.
 
 ## Node
 
@@ -67,17 +71,12 @@ Values are given in WGS84 multiplied by 10,000,000.
 
 ## Collection
 
-Collections provide the following fields:
+Collections provide only one entry:
 
-    String[] node_role;
-    int[] node_lon;
-    int[] node_lat;
+    SliceDefinition[] defs
 
-    String[] way_role;
-    int[][] way_lon;
-    int[][] way_lat;
+The `SliceDefinition`s define a list of slices in the Oma file (by
+giving type, boundingbox, key and value) where the members of this
+collection can be found. If `defs` is empty, the members might be
+found in any slice.
 
-The first three items define a list of nodes with a role. The last
-three items define a list of ways with a role.
-
-Values are given in WGS84 multiplied by 10,000,000.

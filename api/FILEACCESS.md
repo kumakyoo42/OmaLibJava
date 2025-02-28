@@ -43,7 +43,7 @@ Reads a delta encoded y coordinate (latitude).
 
     long getPosition() throws IOException
 
-Returns the current file position.
+Returns **a rough estimate** of the current file position.
 
 **Please note:** This doesn't work correctly, when the
 `OmaInputStream` has been created using an other `InputStream`. In

@@ -10,7 +10,7 @@ need to know about these methods, and therefore in the following
 description, these methods are omitted.
 
 But in case you want to write your own filter class or you want to
-replace the OmaReader by your own class, using these filters, you
+replace the `OmaReader` by your own class, using these filters, you
 might need to know about these details. They can be found at the end
 of this section.
 
@@ -30,8 +30,8 @@ This filter is slow.
     TypeFilter(String type)
 
 All elements of at least one of the types specified by the `type`
-argument pass this filter. Types can be 'N' for nodes, 'W' for ways
-and 'A' for areas. Other characters are ignored.
+argument pass this filter. Types can be 'N' for nodes, 'W' for ways,
+'A' for areas and 'C' for collections. Other characters are ignored.
 
 Example: Only nodes and areas pass `TypeFilter("NA")`.
 
@@ -154,12 +154,14 @@ This filter is fast.
     public PolygonFilter(Polygon poly)
 
 All elements which are inside the given polygon will pass this filter.
+The polygon can be given either as a poly file or as a Polygon (which
+might be queried from the Oma file).
 
 Example: `PolygonFilter("some_file.poly")` will query all elements in
 the polygon defined in the specified poly file.
 
-If the polygon is given by a poly file, the non tight version of the
-bounding box is used.
+If the polygon is given by a poly file, the non tight version of a
+polygon is used.
 
 This filter is fast.
 

@@ -18,7 +18,7 @@ Programs using `OmaReader` essentially resemble the following code:
 First, an `OmaReader` is created, then a `Filter` is applied and
 finally the resulting `Element`s are processed in a loop calling
 `next()` until `null` is returned. Finally, the `OmaReader` is closed
-(or reused after a call to `reset()`).
+(or reused after setting a new filter or a call to `reset()`)
 
 
 ## Constructors

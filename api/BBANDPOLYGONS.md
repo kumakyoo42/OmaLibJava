@@ -11,11 +11,11 @@ bounding boxes and polygones are always considered to be inside.
 
     BoundingBox(int minlon, int minlat, int maxlon, int maxlat)
     BoundingBox(double minlon, double minlat, double maxlon, double maxlat)
-    BoundingBox(BoundingBox bb)
+    BoundingBox(BoundingBox b)
 
     TightBoundingBox(int minlon, int minlat, int maxlon, int maxlat)
     TightBoundingBox(double minlon, double minlat, double maxlon, double maxlat)
-    TightBoundingBox(BoundingBox bb)
+    TightBoundingBox(BoundingBox b)
 
 A bounding box is a "rectangle" defined by the coordinates of the
 lower left corner (`minlon`, `minlat`) and the upper right corner
@@ -75,11 +75,12 @@ Methods provided are:
     public BoundingBox getBoundingBox()
     public boolean contains(int lon, int lat)
     public boolean contains(int[] lon, int[] lat)
+    public boolean contains(BoundingBox b)
 
 The first method returns the bounding box of this polygon.
 
-The second and third method check, if a point or a series of points is
-contained in this polygon. In case of a `TightPolygon` all points of a
-series of points have to be inside the polygon to evaluate to true,
-while for a (non tight) `Polygon` only one of them needs to fulfill
-this property.
+The other three methods check, if a point, a series of points or a
+bounding box is contained in this polygon. In case of a `TightPolygon`
+all points of a series of points (and all four croners of a bounding
+box) have to be inside the polygon to evaluate to true, while for a
+(non tight) `Polygon` only one of them needs to fulfill this property.
