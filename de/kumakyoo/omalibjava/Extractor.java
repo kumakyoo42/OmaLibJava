@@ -95,13 +95,10 @@ public class Extractor extends OmaTool
         BoundingBox bounds = null;
 
         for (ChunkTableEntry e: outChunkTable[i])
-            if (e!=null)
+            if (e!=null && e.bounds!=null)
             {
                 if (bounds==null)
-                {
-                    if (e.bounds!=null)
-                        bounds = new BoundingBox(e.bounds);
-                }
+                    bounds = new BoundingBox(e.bounds);
                 else
                 {
                     bounds.minlon = Math.min(bounds.minlon,e.bounds.minlon);
