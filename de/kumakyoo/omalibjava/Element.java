@@ -142,6 +142,9 @@ abstract public class Element
             for (String tag:tags.keySet())
                 b.append("    ").append(tag).append(" = ").append(tags.get(tag)).append("\n");
 
+        for (Member m:members)
+            b.append("    ").append(m.id).append(" ").append(m.role).append(" ").append(m.nr).append("\n");
+
         return b.toString();
     }
 }
