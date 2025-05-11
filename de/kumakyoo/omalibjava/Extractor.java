@@ -299,7 +299,7 @@ public class Extractor extends OmaTool
                             }
                         }
                         count[j]++;
-                        e.write(out[j],features|(chunkTable[chunk].type=='C'?2:0));
+                        e.write(out[j],features|(chunkTable[chunk].type=='C'?4:0));
                         adjustBoundingBoxOfChunk(j,chunk,e);
                     }
                 }

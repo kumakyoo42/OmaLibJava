@@ -96,32 +96,32 @@ public class OmaReader extends OmaTool
 
     public boolean containsID()
     {
-        return (features&2)!=0;
+        return (features&4)!=0;
     }
 
     public boolean containsVersion()
     {
-        return (features&4)!=0;
+        return (features&8)!=0;
     }
 
     public boolean containsTimestamp()
     {
-        return (features&8)!=0;
+        return (features&16)!=0;
     }
 
     public boolean containsChangeset()
     {
-        return (features&16)!=0;
+        return (features&32)!=0;
     }
 
     public boolean containsUser()
     {
-        return (features&32)!=0;
+        return (features&64)!=0;
     }
 
     public boolean elementsOnce()
     {
-        return (features&64)!=0;
+        return (features&128)!=0;
     }
 
     public Element next() throws IOException
