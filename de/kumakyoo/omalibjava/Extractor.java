@@ -266,8 +266,11 @@ public class Extractor extends OmaTool
 
         int elementCount = in.readInt();
         OmaInputStream save = in;
-        if ((features&1)!=0)
+        if (zipped)
+        {
+            in.readInt(); // length
             in = new OmaInputStream(new BufferedInputStream(new InflaterInputStream(in)));
+        }
 
         int[] count = new int[outCount];
         OmaOutputStream[] orig = new OmaOutputStream[outCount];
@@ -291,15 +294,16 @@ public class Extractor extends OmaTool
                         if (count[j]==0)
                         {
                             out[j].writeInt(0);
-                            if ((features&1)!=0)
+                            if (zipped)
                             {
+                                out[j].writeInt(0);
                                 dos[j] = new DeflaterOutputStream(out[j], new Deflater(Deflater.BEST_COMPRESSION));
                                 bos[j] = new BufferedOutputStream(dos[j]);
                                 out[j] = new OmaOutputStream(bos[j]);
                             }
                         }
                         count[j]++;
-                        e.write(out[j],features|(chunkTable[chunk].type=='C'?4:0));
+                        e.write(out[j],features|(chunkTable[chunk].type=='C'?1:0));
                         adjustBoundingBoxOfChunk(j,chunk,e);
                     }
                 }
@@ -309,7 +313,7 @@ public class Extractor extends OmaTool
         {
             if (count[i]>0)
             {
-                if ((features&1)!=0)
+                if (zipped)
                 {
                     bos[i].flush();
                     dos[i].finish();
@@ -319,6 +323,8 @@ public class Extractor extends OmaTool
                 long end = out[i].getPosition();
                 out[i].setPosition(outSliceTable[i][slice].start);
                 out[i].writeInt(count[i]);
+                if (zipped)
+                    out[i].writeInt((int)(end-outSliceTable[i][slice].start-8));
                 out[i].setPosition(end);
             }
             else if (blockUsed[i])
@@ -388,14 +394,14 @@ public class Extractor extends OmaTool
         enforce(in.readByte()=='O', "oma-file expected");
         enforce(in.readByte()=='M', "oma-file expected");
         enforce(in.readByte()=='A', "oma-file expected");
-        enforce(in.readByte()==0, "unknown version");
+        enforce(in.readByte()==VERSION, "unknown version");
 
         for (int i=0;i<outCount;i++)
         {
             out[i].writeByte('O');
             out[i].writeByte('M');
             out[i].writeByte('A');
-            out[i].writeByte(0);
+            out[i].writeByte(VERSION);
         }
 
         features = in.readByte();
@@ -420,7 +426,7 @@ public class Extractor extends OmaTool
         in.readInt();
 
         long chunkTablePos = in.readLong();
-        copyTypeTable();
+        copyHeaderEntries();
 
         in.setPosition(chunkTablePos);
 
@@ -430,7 +436,56 @@ public class Extractor extends OmaTool
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
     }
 
-    protected void copyTypeTable() throws IOException
+    protected void copyHeaderEntries() throws IOException
+    {
+        while (true)
+        {
+            int type = in.readByte();
+            if (type<0) type+=256;
+            if (type==0) break;
+            int pos = in.readInt();
+
+            long[] outpos = new long[outCount];
+
+            for (int l=0;l<outCount;l++)
+            {
+                out[l].writeByte(type);
+                outpos[l] = out[l].getPosition();
+                out[l].writeInt(0);
+            }
+
+            switch (type&127)
+            {
+            case 'c':
+                String name = in.readString();
+                if ("DEFLATE".equals(name))
+                    zipped = true;
+                for (int l=0;l<outCount;l++)
+                    out[l].writeString(name);
+                break;
+            case 't':
+                copyTypeTable(zipped & (type&128)==128);
+                break;
+            default:
+                throw new IOException("unknown header entry: "+type);
+            }
+
+            for (int l=0;l<outCount;l++)
+            {
+                long npos = out[l].getPosition();
+                out[l].setPosition((int)outpos[l]);
+                out[l].writeInt((int)npos);
+                out[l].setPosition((int)npos);
+            }
+
+            in.setPosition(pos);
+        }
+
+        for (int l=0;l<outCount;l++)
+            out[l].writeByte(0);
+    }
+
+    protected void copyTypeTable(boolean zipped) throws IOException
     {
         OmaOutputStream[] origout = new OmaOutputStream[outCount];
         DeflaterOutputStream[] dos = new DeflaterOutputStream[outCount];
@@ -440,12 +495,17 @@ public class Extractor extends OmaTool
         for (int i=0;i<outCount;i++)
             origout[i] = out[i];
 
-        if ((features&1)!=0)
+        long[] pos = new long[outCount];
+
+        if (zipped)
         {
+            in.readInt(); // Length
             in = new OmaInputStream(new BufferedInputStream(new InflaterInputStream(in)));
 
             for (int i=0;i<outCount;i++)
             {
+                pos[i] = out[i].getPosition();
+                out[i].writeInt(0);
                 dos[i] = new DeflaterOutputStream(out[i], new Deflater(Deflater.BEST_COMPRESSION));
                 bos[i] = new BufferedOutputStream(dos[i]);
                 out[i] = new OmaOutputStream(bos[i]);
@@ -484,12 +544,16 @@ public class Extractor extends OmaTool
             }
         }
 
-        if ((features&1)!=0)
+        if (zipped)
             for (int i=0;i<outCount;i++)
             {
                 bos[i].flush();
                 dos[i].finish();
                 out[i] = origout[i];
+                long npos = out[i].getPosition();
+                out[i].setPosition(pos[i]);
+                out[i].writeInt((int)(npos-pos[i]-4));
+                out[i].setPosition(npos);
             }
         in = orig;
     }

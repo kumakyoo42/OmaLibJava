@@ -71,15 +71,15 @@ abstract public class Element
 
     public void writeMetaData(OmaOutputStream out, int features) throws IOException
     {
-        if ((features&4)!=0 || this instanceof Collection)
+        if ((features&1)!=0 || this instanceof Collection)
             out.writeLong(id);
-        if ((features&8)!=0)
+        if ((features&2)!=0)
             out.writeSmallInt(version);
-        if ((features&16)!=0)
+        if ((features&4)!=0)
             out.writeLong(timestamp);
-        if ((features&32)!=0)
+        if ((features&8)!=0)
             out.writeLong(changeset);
-        if ((features&64)!=0)
+        if ((features&16)!=0)
         {
             out.writeInt(uid);
             out.writeString(user);
@@ -104,15 +104,15 @@ abstract public class Element
 
     void readMeta(OmaInputStream in, int features) throws IOException
     {
-        if ((features&4)!=0)
+        if ((features&1)!=0)
             id = in.readLong();
-        if ((features&8)!=0)
+        if ((features&2)!=0)
             version = in.readSmallInt();
-        if ((features&16)!=0)
+        if ((features&4)!=0)
             timestamp = in.readLong();
-        if ((features&32)!=0)
+        if ((features&8)!=0)
             changeset = in.readLong();
-        if ((features&64)!=0)
+        if ((features&16)!=0)
         {
             uid = in.readInt();
             user = in.readString();

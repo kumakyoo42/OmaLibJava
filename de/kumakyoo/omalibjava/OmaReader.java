@@ -91,37 +91,37 @@ public class OmaReader extends OmaTool
 
     public boolean isZipped()
     {
-        return (features&1)!=0;
+        return zipped;
     }
 
     public boolean containsID()
     {
-        return (features&4)!=0;
+        return (features&1)!=0;
     }
 
     public boolean containsVersion()
     {
-        return (features&8)!=0;
+        return (features&2)!=0;
     }
 
     public boolean containsTimestamp()
     {
-        return (features&16)!=0;
+        return (features&4)!=0;
     }
 
     public boolean containsChangeset()
     {
-        return (features&32)!=0;
+        return (features&8)!=0;
     }
 
     public boolean containsUser()
     {
-        return (features&64)!=0;
+        return (features&16)!=0;
     }
 
     public boolean elementsOnce()
     {
-        return (features&128)!=0;
+        return (features&32)!=0;
     }
 
     public Element next() throws IOException
@@ -231,14 +231,14 @@ public class OmaReader extends OmaTool
         enforce(in.readByte()=='O', "oma-file expected");
         enforce(in.readByte()=='M', "oma-file expected");
         enforce(in.readByte()=='A', "oma-file expected");
-        enforce(in.readByte()==0, "unknown version");
+        enforce(in.readByte()==VERSION, "unknown version");
 
         features = in.readByte();
 
         globalBounds = new BoundingBox(in.readInt(),in.readInt(),in.readInt(),in.readInt());
 
         long chunkTablePos = in.readLong();
-        readTypeTable();
+        readHeaderEntries();
         in.setPosition(chunkTablePos);
 
         int count = in.readInt();
@@ -247,11 +247,45 @@ public class OmaReader extends OmaTool
             chunkTable[i] = new ChunkTableEntry(in.readLong(),in.readByte(),new BoundingBox(in));
     }
 
-    protected void readTypeTable() throws IOException
+    protected void readHeaderEntries() throws IOException
+    {
+        while (true)
+        {
+            int type = in.readByte();
+            if (type<0) type+=256;
+            if (type==0) break;
+            int pos = in.readInt();
+
+            switch (type&127)
+            {
+            case 'c':
+                String name = in.readString();
+                if ("DEFLATE".equals(name))
+                    zipped = true;
+                else if ("NONE".equals(name))
+                    zipped = false;
+                else
+                    throw new IOException("unknown compression method: "+name);
+                break;
+            case 't':
+                readTypeTable(zipped & (type&128)==128);
+                break;
+            default:
+                throw new IOException("unknown header entry: "+type);
+            }
+
+            in.setPosition(pos);
+        }
+    }
+
+    protected void readTypeTable(boolean zipped) throws IOException
     {
         OmaInputStream orig = in;
-        if ((features&1)!=0)
+        if (zipped)
+        {
+            in.readInt(); // length
             in = new OmaInputStream(new BufferedInputStream(new InflaterInputStream(in)));
+        }
 
         typeTable = new HashMap<>();
 
@@ -355,8 +389,11 @@ public class OmaReader extends OmaTool
 
         elementCount = in.readInt();
         save = in;
-        if ((features&1)!=0)
+        if (zipped)
+        {
+            in.readInt(); // Length
             in = new OmaInputStream(new BufferedInputStream(new InflaterInputStream(in)));
+        }
     }
 
     protected Element readElement() throws IOException

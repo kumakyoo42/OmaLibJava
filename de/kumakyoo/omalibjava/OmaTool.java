@@ -4,6 +4,8 @@ import java.io.*;
 
 abstract class OmaTool
 {
+    static final int VERSION = 1;
+
     protected String filename;
     protected OmaInputStream in;
 
@@ -12,6 +14,7 @@ abstract class OmaTool
     protected SliceTableEntry[] sliceTable;
 
     protected int features;
+    protected boolean zipped;
 
     protected OmaTool(String filename)
     {
@@ -42,7 +45,7 @@ abstract class OmaTool
 
         e.readTags(in);
         e.readMembers(in);
-        e.readMeta(in,features|(chunkTable[chunk].type=='C'?4:0));
+        e.readMeta(in,features|(chunkTable[chunk].type=='C'?1:0));
 
         return e;
     }
