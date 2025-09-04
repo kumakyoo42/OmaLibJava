@@ -23,4 +23,9 @@ public class MemberFilter extends Filter
                 return true;
         return false;
     }
+
+    public boolean countable()
+    {
+        return false;
+    }
 }
