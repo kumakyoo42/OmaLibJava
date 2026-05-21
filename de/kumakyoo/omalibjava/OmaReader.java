@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-public class OmaReader extends OmaTool
+public class OmaReader extends OmaInputTool
 {
     protected Filter filter;
 

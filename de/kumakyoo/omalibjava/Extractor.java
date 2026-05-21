@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-public class Extractor extends OmaTool
+public class Extractor extends OmaInputTool
 {
     protected int outCount;
     protected List<Filter> filter;
