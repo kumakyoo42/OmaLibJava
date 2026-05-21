@@ -40,7 +40,8 @@ public class BoundingBox implements Container
 
     public boolean contains(int lon, int lat)
     {
-        return lon>=minlon && lon<=maxlon && lat>=minlat && lat<=maxlat;
+        return minlon==Integer.MAX_VALUE
+            || (lon>=minlon && lon<=maxlon && lat>=minlat && lat<=maxlat);
     }
 
     public boolean contains(int[] lon, int[] lat)

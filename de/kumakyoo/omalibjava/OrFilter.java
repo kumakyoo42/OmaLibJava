@@ -53,9 +53,7 @@ public class OrFilter extends Filter
     public boolean countable()
     {
         for (int i=0;i<fs.length;i++)
-            if (!s[i]) return false;
-        for (Filter f: fs)
-            if (!f.countable()) return false;
+            if (s[i] && !f.countable()) return false;
         return true;
     }
 }
