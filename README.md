@@ -28,7 +28,7 @@ On Linux systems you can use the shell script `build.sh` to build
 
 Building on other platforms is neither tested nor directly supported
 yet. Basically you need to compile the java files in folder
-`de/kumakyoo/omajavalib` and build a jar file from the resulting class
+`de/kumakyoo/omalibjava` and build a jar file from the resulting class
 files.
 
 ## Examples
