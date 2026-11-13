@@ -49,8 +49,6 @@ whole Oma file needs to be searched for elements.
 of type "power" in a certain bounding box. This example uses the fact,
 that "power" is a block key for nodes, ways and areas. Using a
 BlockFilter, and a BoundingBoxFilter, this query is very fast.
-Additionally it uses a LifecycleFilter to restrict the search on
-elements without lifecycle prefix.
 
 * [Berlin.java](examples/Berlin.java) provides some figures about
 Berlin. This is a more complex example, showing how to use PolyFilter

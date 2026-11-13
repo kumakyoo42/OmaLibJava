@@ -56,4 +56,12 @@ public class OrFilter extends Filter
             if (s[i] && !fs[i].countable()) return false;
         return true;
     }
+
+    public boolean hasLifecycleFilter()
+    {
+        for (Filter f:fs)
+            if (f.hasLifecycleFilter())
+                return true;
+        return false;
+    }
 }

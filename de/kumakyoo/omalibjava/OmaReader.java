@@ -54,7 +54,10 @@ public class OmaReader extends OmaInputTool
 
     public void setFilter(Filter filter)
     {
-        this.filter = filter;
+        if (!filter.hasLifecycleFilter())
+            this.filter = new AndFilter(new LifecycleFilter(),filter);
+        else
+            this.filter = filter;
         reset();
     }
 

@@ -26,4 +26,9 @@ public class Filter
     {
         return true;
     }
+
+    public boolean hasLifecycleFilter()
+    {
+        return false;
+    }
 }

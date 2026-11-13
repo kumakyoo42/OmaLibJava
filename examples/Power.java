@@ -15,11 +15,10 @@ public class Power
     {
         Filter f1 = new BlockFilter("power");
         Filter f2 = new BoundingBoxFilter(8.194,49.563,8.195,49.564);
-        Filter f3 = new LifecycleFilter(); // try new LifecycleFilter("removed") instead...
-        Filter f4 = new AndFilter(f1,f2,f3);
+        Filter f3 = new AndFilter(f1,f2);
 
         OmaReader r = new OmaReader(args[0]);
-        r.setFilter(f4);
+        r.setFilter(f3);
 
         while (true)
         {

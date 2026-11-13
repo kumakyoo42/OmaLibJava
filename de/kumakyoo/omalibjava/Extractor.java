@@ -27,7 +27,10 @@ public class Extractor extends OmaInputTool
 
     public void addExtract(Filter f, String filename)
     {
-        filter.add(f);
+        if (!f.hasLifecycleFilter())
+            filter.add(new AndFilter(new LifecycleFilter(),f));
+        else
+            filter.add(f);
         name.add(filename);
     }
 

@@ -38,4 +38,11 @@ public class NotFilter extends Filter
     {
         return !c || !b || !s;
     }
+
+    public boolean hasLifecycleFilter()
+    {
+        if (f.hasLifecycleFilter())
+            return true;
+        return false;
+    }
 }

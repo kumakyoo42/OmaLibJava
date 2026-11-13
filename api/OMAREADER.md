@@ -52,7 +52,9 @@ Closes the OmaReader.
     setFilter(Filter filter)
 
 Sets a new filter to use. This method automatically resets the
-`OmaReader`.
+`OmaReader`. If the filter does not contain a `LifecycleFilter`, an
+empty one is automatically added to avoid querying non existend
+elements.
 
     Filter getFilter()
 

@@ -27,8 +27,10 @@ file `filename`.
 
     void addExtract(Filter f, String filename)
 
-Adds a new extract defined by the filter `f`. The extract will be saved
-to the file called `filename`.
+Adds a new extract defined by the filter `f`. The extract will be
+saved to the file called `filename`. If the filter does not contain a
+`LifecycleFilter`, an empty one is automatically added to avoid
+querying non existend elements.
 
 **Please note:** If two extracts write to the same file, the result of
 calling `run()` is undefined.

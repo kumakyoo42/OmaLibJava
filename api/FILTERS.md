@@ -70,7 +70,10 @@ This filter is slow.
     LifecycleFilter()
 
 All elements without a lifecycle prefix for the key of the block will
-pass this filter.
+pass this filter. Please note: `OmaReader` and `Extractor` will add this
+Filter automatically if no part of the used filter does contain a
+`LifecycleFilter` to avoid accidentially querying elements that do not
+exist.
 
     LifecycleFilter(String lifecycle)
 
@@ -307,3 +310,8 @@ Returns `true` if all elements of a slice pass the filter. It is
 guaranteed that `needsChunk`, `needsBlock` and `needsSlice` have been
 called for the surrounding chunk, block and slice before this method
 is invoked.
+
+    public boolean hasLifecycleFilter()
+
+Returns `true` if the element is a LifecycleFilter or at least one of
+its components contains or is a LifecycleFilter.    

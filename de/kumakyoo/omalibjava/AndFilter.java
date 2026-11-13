@@ -43,4 +43,12 @@ public class AndFilter extends Filter
             if (!f.countable()) return false;
         return true;
     }
+
+    public boolean hasLifecycleFilter()
+    {
+        for (Filter f:fs)
+            if (f.hasLifecycleFilter())
+                return true;
+        return false;
+    }
 }
